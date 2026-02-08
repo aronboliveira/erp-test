@@ -6,11 +6,25 @@ import {
 } from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
 const angularApp = new AngularNodeAppEngine();
+
+/**
+ * Proxy API requests to the backend
+ */
+const backendUrl = process.env['BACKEND_URL'] || 'http://localhost:8080';
+app.use(
+  '/api',
+  createProxyMiddleware({
+    target: backendUrl,
+    changeOrigin: true,
+    logLevel: 'debug',
+  }),
+);
 
 /**
  * Serve static files from /browser
