@@ -45,7 +45,6 @@ echo ""
 
 echo -e "${BLUE}[4/5]${NC} ${BOLD}Starting Docker containers...${NC}"
 echo -e "${CYAN}→ Building and starting: PostgreSQL + Backend (Spring Boot) + Frontend (Angular SSR)${NC}"
-cd acme-admin
 docker compose up -d --build
 echo -e "${GREEN}✓ Containers started successfully${NC}\n"
 
@@ -98,9 +97,9 @@ echo -e "  ${CYAN}☕ Backend API${NC}      → ${GREEN}http://localhost:8080${N
 echo -e "  ${CYAN}🌐 Admin Dashboard${NC}  → ${GREEN}http://localhost:4000${NC}"
 echo ""
 echo -e "${BOLD}Useful commands:${NC}"
-echo -e "  ${YELLOW}docker compose -f acme-admin/docker-compose.yml logs -f${NC}    → View live logs"
-echo -e "  ${YELLOW}docker compose -f acme-admin/docker-compose.yml ps${NC}         → Check container status"
-echo -e "  ${YELLOW}docker compose -f acme-admin/docker-compose.yml down${NC}       → Stop all containers"
+echo -e "  ${YELLOW}docker compose logs -f${NC}    → View live logs"
+echo -e "  ${YELLOW}docker compose ps${NC}         → Check container status"
+echo -e "  ${YELLOW}docker compose down${NC}       → Stop all containers"
 echo ""
 echo -e "${BOLD}API Documentation:${NC}"
 echo -e "  ${CYAN}Health Check${NC}        → ${GREEN}http://localhost:8080/actuator/health${NC}"

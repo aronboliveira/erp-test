@@ -20,7 +20,7 @@ services:
 
   app:
     build:
-      context: ..
+      context: .
       dockerfile: Dockerfile
     container_name: acme-app
     ports:

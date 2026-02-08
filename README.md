@@ -7,6 +7,7 @@
 ---
 
 <a id="en-us"></a>
+
 <details open>
 <summary>🇺🇸 English (US)</summary>
 
@@ -14,10 +15,10 @@
 
 ACME Admin is a monorepo containing two workspaces:
 
-| Module | Stack | Port |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Module             | Stack                                                       | Port   |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Features
 
@@ -78,33 +79,33 @@ admin-dashboard/
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|---|---|---|
-| `DATABASE_URL` | JDBC connection string | prod |
-| `DATABASE_USER` | PostgreSQL username | prod |
-| `DATABASE_PASSWORD` | PostgreSQL password | prod |
-| `STRIPE_PUBLISHABLE_KEY` | Stripe public key | prod |
-| `STRIPE_SECRET_KEY` | Stripe secret key | prod |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | prod |
+| Variable                 | Description                   | Required |
+| ------------------------ | ----------------------------- | -------- |
+| `DATABASE_URL`           | JDBC connection string        | prod     |
+| `DATABASE_USER`          | PostgreSQL username           | prod     |
+| `DATABASE_PASSWORD`      | PostgreSQL password           | prod     |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe public key             | prod     |
+| `STRIPE_SECRET_KEY`      | Stripe secret key             | prod     |
+| `STRIPE_WEBHOOK_SECRET`  | Stripe webhook signing secret | prod     |
 
 ### API Endpoints
 
-| Method | Path | Description |
-|---|---|---|
-| `GET/POST` | `/api/sales/orders` | Orders CRUD |
-| `GET/POST` | `/api/finance/revenue` | Revenue records |
-| `GET/POST` | `/api/finance/expenses` | Expense records |
-| `GET/POST` | `/api/finance/budgets` | Budget periods |
-| `GET/POST` | `/api/finance/bills` | Bill management |
-| `GET/POST` | `/api/catalog/items` | Products & services |
-| `GET/POST` | `/api/taxes` | Tax configuration |
-| `POST` | `/api/billing/checkout-session` | Stripe checkout |
-| `POST` | `/api/billing/payment-intents` | Stripe payment intents |
-| `POST` | `/api/billing/webhook` | Stripe webhook receiver |
-| `GET` | `/api/billing/events` | Billing event log |
-| `GET/POST/PUT` | `/api/admin/users` | User management |
-| `GET/POST/PUT` | `/api/admin/roles` | Role management |
-| `GET` | `/api/me` | Current user profile |
+| Method         | Path                            | Description             |
+| -------------- | ------------------------------- | ----------------------- |
+| `GET/POST`     | `/api/sales/orders`             | Orders CRUD             |
+| `GET/POST`     | `/api/finance/revenue`          | Revenue records         |
+| `GET/POST`     | `/api/finance/expenses`         | Expense records         |
+| `GET/POST`     | `/api/finance/budgets`          | Budget periods          |
+| `GET/POST`     | `/api/finance/bills`            | Bill management         |
+| `GET/POST`     | `/api/catalog/items`            | Products & services     |
+| `GET/POST`     | `/api/taxes`                    | Tax configuration       |
+| `POST`         | `/api/billing/checkout-session` | Stripe checkout         |
+| `POST`         | `/api/billing/payment-intents`  | Stripe payment intents  |
+| `POST`         | `/api/billing/webhook`          | Stripe webhook receiver |
+| `GET`          | `/api/billing/events`           | Billing event log       |
+| `GET/POST/PUT` | `/api/admin/users`              | User management         |
+| `GET/POST/PUT` | `/api/admin/roles`              | Role management         |
+| `GET`          | `/api/me`                       | Current user profile    |
 
 ### Docker
 
@@ -122,6 +123,7 @@ Private — all rights reserved.
 ---
 
 <a id="pt-br"></a>
+
 <details>
 <summary>🇧🇷 Português (BR)</summary>
 
@@ -129,10 +131,10 @@ Private — all rights reserved.
 
 ACME Admin é um monorepo contendo dois workspaces:
 
-| Módulo | Stack | Porta |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Módulo             | Stack                                                       | Porta  |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Funcionalidades
 
@@ -164,14 +166,14 @@ cd admin-dashboard && npm install && npm start
 
 ### Variáveis de Ambiente
 
-| Variável | Descrição | Obrigatória |
-|---|---|---|
-| `DATABASE_URL` | String de conexão JDBC | prod |
-| `DATABASE_USER` | Usuário PostgreSQL | prod |
-| `DATABASE_PASSWORD` | Senha PostgreSQL | prod |
-| `STRIPE_PUBLISHABLE_KEY` | Chave pública Stripe | prod |
-| `STRIPE_SECRET_KEY` | Chave secreta Stripe | prod |
-| `STRIPE_WEBHOOK_SECRET` | Segredo de assinatura webhook | prod |
+| Variável                 | Descrição                     | Obrigatória |
+| ------------------------ | ----------------------------- | ----------- |
+| `DATABASE_URL`           | String de conexão JDBC        | prod        |
+| `DATABASE_USER`          | Usuário PostgreSQL            | prod        |
+| `DATABASE_PASSWORD`      | Senha PostgreSQL              | prod        |
+| `STRIPE_PUBLISHABLE_KEY` | Chave pública Stripe          | prod        |
+| `STRIPE_SECRET_KEY`      | Chave secreta Stripe          | prod        |
+| `STRIPE_WEBHOOK_SECRET`  | Segredo de assinatura webhook | prod        |
 
 ### Licença
 
@@ -182,6 +184,7 @@ Privado — todos os direitos reservados.
 ---
 
 <a id="en-gb"></a>
+
 <details>
 <summary>🇬🇧 English (UK)</summary>
 
@@ -189,10 +192,10 @@ Privado — todos os direitos reservados.
 
 ACME Admin is a monorepo containing two workspaces:
 
-| Module | Stack | Port |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Module             | Stack                                                       | Port   |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Features
 
@@ -231,6 +234,7 @@ Private — all rights reserved.
 ---
 
 <a id="fr"></a>
+
 <details>
 <summary>🇫🇷 Français</summary>
 
@@ -238,10 +242,10 @@ Private — all rights reserved.
 
 ACME Admin est un monorepo contenant deux espaces de travail :
 
-| Module | Stack | Port |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Module             | Stack                                                       | Port   |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Fonctionnalités
 
@@ -280,6 +284,7 @@ Privé — tous droits réservés.
 ---
 
 <a id="it"></a>
+
 <details>
 <summary>🇮🇹 Italiano</summary>
 
@@ -287,10 +292,10 @@ Privé — tous droits réservés.
 
 ACME Admin è un monorepo contenente due workspace:
 
-| Modulo | Stack | Porta |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Modulo             | Stack                                                       | Porta  |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Funzionalità
 
@@ -329,6 +334,7 @@ Privato — tutti i diritti riservati.
 ---
 
 <a id="zh"></a>
+
 <details>
 <summary>🇨🇳 中文</summary>
 
@@ -336,10 +342,10 @@ Privato — tutti i diritti riservati.
 
 ACME Admin 是一个包含两个工作区的 monorepo：
 
-| 模块 | 技术栈 | 端口 |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| 模块               | 技术栈                                                      | 端口   |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### 功能
 
@@ -378,6 +384,7 @@ cd admin-dashboard && npm install && npm start
 ---
 
 <a id="ru"></a>
+
 <details>
 <summary>🇷🇺 Русский</summary>
 
@@ -385,10 +392,10 @@ cd admin-dashboard && npm install && npm start
 
 ACME Admin — это монорепозиторий, содержащий два рабочих пространства:
 
-| Модуль | Стек | Порт |
-|---|---|---|
-| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
-| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+| Модуль             | Стек                                                        | Порт   |
+| ------------------ | ----------------------------------------------------------- | ------ |
+| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Возможности
 
