@@ -1,0 +1,15 @@
+name: acme-erp
+
+metadata:
+  version: "1.0.0"
+
+services:
+  api:
+    project: ./acme-admin
+    language: java
+    host: containerapp
+
+  dashboard:
+    project: ./admin-dashboard
+    language: ts
+    host: containerapp
