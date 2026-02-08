@@ -140,7 +140,7 @@ resource apiApp 'Microsoft.App/containerApps@2024-03-01' = {
         }
         {
           name: 'db-url'
-          value: 'jdbc:postgresql://${postgres.properties.fullyQualifiedDomainName}:5432/acmedb?sslmode=require'
+          value: 'jdbc:postgresql://${postgres.properties.fullyQualifiedDomainName}:5433/acmedb?sslmode=require'
         }
         {
           name: 'db-user'
