@@ -8,7 +8,7 @@ RUN mvn clean package -DskipTests -B
 FROM node:20-alpine AS frontend-build
 WORKDIR /frontend
 COPY admin-dashboard/package*.json ./
-RUN npm ci --ignore-scripts
+RUN npm install --legacy-peer-deps
 COPY admin-dashboard/ ./
 RUN npm run build
 
