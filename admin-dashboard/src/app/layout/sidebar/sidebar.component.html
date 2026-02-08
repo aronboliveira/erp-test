@@ -1,0 +1,296 @@
+<aside
+  #root
+  appDarkModeClass
+  class="aside"
+  [class.aside--collapsed]="collapsed()"
+  [class.aside--mobileOpen]="mobileOpen()"
+  aria-label="Sidebar"
+  style="width: 23rem; margin-left: -1.5rem"
+>
+  <div class="aside__backdrop" (click)="closeMobile()" aria-hidden="true"></div>
+  <div class="aside__panel" id="admin-sidebar">
+    <div class="aside__header">
+      <div class="aside__brand">
+        <span class="aside__brandMark" aria-hidden="true">ADM</span>
+        <span class="aside__brandText" [class.a11y-sr-only]="collapsed()">Admin</span>
+      </div>
+
+      <div class="aside__actions">
+        <button
+          type="button"
+          class="aside__iconBtn"
+          (click)="toggleCollapsed()"
+          [attr.aria-pressed]="collapsed() ? 'true' : 'false'"
+          aria-label="Toggle collapse"
+        >
+          <span aria-hidden="true">≡</span>
+        </button>
+
+        <button
+          type="button"
+          class="aside__iconBtn aside__iconBtn--mobile"
+          (click)="toggleMobile()"
+          [attr.aria-expanded]="mobileOpen() ? 'true' : 'false'"
+          aria-controls="admin-sidebar"
+          aria-label="Toggle menu"
+        >
+          <span aria-hidden="true">☰</span>
+        </button>
+      </div>
+    </div>
+
+    <nav class="nav" role="navigation" aria-label="Primary navigation">
+      <div class="nav__group" role="group" aria-label="Overview">
+        <div class="nav__groupTitle" role="heading" aria-level="2">Overview</div>
+        <ul class="nav__items" role="list">
+          <li class="nav__item">
+            <a
+              class="nav__itemBtn"
+              routerLink="/dashboard"
+              routerLinkActive="nav__itemBtn--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #dashActive="routerLinkActive"
+              [attr.aria-current]="dashActive.isActive ? 'page' : null"
+              aria-label="Dashboard"
+            >
+              <span class="nav__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                  <path
+                    d="M12 3.75a.75.75 0 0 1 .531.22l7.5 7.5a.75.75 0 0 1-1.062 1.06l-.862-.86v7.58a.75.75 0 0 1-.75.75h-10.5a.75.75 0 0 1-.75-.75v-7.58l-.862.86a.75.75 0 0 1-1.062-1.06l7.5-7.5a.75.75 0 0 1 .53-.22z"
+                    fill="currentColor"
+                  ></path>
+                </svg>
+              </span>
+              <span class="nav__dot" aria-hidden="true"></span>
+              <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav__item">
+            <a
+              class="nav__itemBtn"
+              routerLink="/orders"
+              routerLinkActive="nav__itemBtn--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #ordersActive="routerLinkActive"
+              [attr.aria-current]="ordersActive.isActive ? 'page' : null"
+              aria-label="Orders"
+            >
+              <span class="nav__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  focusable="false"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M2.25 3.75a.75.75 0 0 1 .75-.75h2.386a.75.75 0 0 1 .75.75v.99c0 .083.013.164.04.24l1.445 4.06a.75.75 0 0 0 .706.502h9.656a.75.75 0 0 0 .709-.49l1.234-3.592a.75.75 0 0 0-.709-.99H6.944"
+                  ></path>
+                  <path d="M16.5 21a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"></path>
+                  <path d="M8.25 21a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"></path>
+                </svg>
+              </span>
+              <span class="nav__dot" aria-hidden="true"></span>
+              <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Orders</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav__group" role="group" aria-label="Finance">
+        <div class="nav__groupTitle" role="heading" aria-level="2">Finance</div>
+        <ul class="nav__items" role="list">
+          <li class="nav__item">
+            <a
+              class="nav__itemBtn"
+              routerLink="/revenues"
+              routerLinkActive="nav__itemBtn--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #revActive="routerLinkActive"
+              [attr.aria-current]="revActive.isActive ? 'page' : null"
+              aria-label="Revenues"
+            >
+              <span class="nav__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  focusable="false"
+                  aria-hidden="true"
+                >
+                  <path d="M2.25 18L9 11.25l4.306 4.307a.75.75 0 0 0 1.06 0L21.75 8.25"></path>
+                  <path d="M21.75 8.25v6.75h-6.75"></path>
+                </svg>
+              </span>
+              <span class="nav__dot" aria-hidden="true"></span>
+              <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Revenues</span>
+            </a>
+          </li>
+          <li class="nav__item">
+            <a
+              class="nav__itemBtn"
+              routerLink="/expenses"
+              routerLinkActive="nav__itemBtn--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #expActive="routerLinkActive"
+              [attr.aria-current]="expActive.isActive ? 'page' : null"
+              aria-label="Expenses"
+            >
+              <span class="nav__icon" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  focusable="false"
+                  aria-hidden="true"
+                >
+                  <path d="M9.75 15.75 12 18l2.25-2.25"></path>
+                  <path d="M12 6v12"></path>
+                  <path
+                    d="M6.75 3.75h10.5A2.25 2.25 0 0 1 19.5 6v12a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18V6a2.25 2.25 0 0 1 2.25-2.25Z"
+                  ></path>
+                </svg>
+              </span>
+              <span class="nav__dot" aria-hidden="true"></span>
+              <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Expenses</span>
+            </a>
+          </li>
+          @let me = me$ | async;
+          @if (me) {
+            @if (can(me, 'BILLING_READ')) {
+              <li class="nav__item">
+                <a
+                  class="nav__itemBtn"
+                  routerLink="/billing"
+                  routerLinkActive="nav__itemBtn--active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  #billActive="routerLinkActive"
+                  [attr.aria-current]="billActive.isActive ? 'page' : null"
+                  aria-label="Billing"
+                >
+                  <span class="nav__icon" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      focusable="false"
+                      aria-hidden="true"
+                    >
+                      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z"></path>
+                      <path
+                        d="M0 7v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm5 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 5 9.5z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span class="nav__dot" aria-hidden="true"></span>
+                  <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Billing</span>
+                </a>
+              </li>
+            }
+            @if (can(me, 'BILLING_PAY')) {
+              <li class="nav__item">
+                <a
+                  class="nav__itemBtn nav__itemBtn--nested"
+                  routerLink="/billing/pay"
+                  routerLinkActive="nav__itemBtn--active"
+                  [routerLinkActiveOptions]="{ exact: true }"
+                  #payActive="routerLinkActive"
+                  [attr.aria-current]="payActive.isActive ? 'page' : null"
+                  aria-label="Pay with Stripe"
+                >
+                  <span class="nav__icon nav__icon--muted" aria-hidden="true">
+                    <svg
+                      viewBox="0 0 16 16"
+                      fill="currentColor"
+                      focusable="false"
+                      aria-hidden="true"
+                    >
+                      <path d="M2 1a1 1 0 0 0-1 1v5h1V3h12v4h1V2a1 1 0 0 0-1-1H2z"></path>
+                      <path
+                        d="M3 8a.5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 4 11.5h1.5v1H5a.5.5 0 0 0 0 1h1v1h1v-1h2v1h1v-1h1a.5.5 0 0 0 0-1H10.5v-1H12a1.5 1.5 0 0 0 1.5-1.5V8.5a.5.5 0 0 0-.5-.5H3zm1 .5h8v1.5a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1-.5-.5V8.5z"
+                      ></path>
+                    </svg>
+                  </span>
+                  <span class="nav__dot" aria-hidden="true"></span>
+                  <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Pay</span>
+                </a>
+              </li>
+            }
+          } @else {
+            <li class="nav__item">
+              <a
+                class="nav__itemBtn"
+                routerLink="/billing"
+                routerLinkActive="nav__itemBtn--active"
+                [routerLinkActiveOptions]="{ exact: true }"
+                #billActive="routerLinkActive"
+                [attr.aria-current]="billActive.isActive ? 'page' : null"
+                aria-label="Billing"
+              >
+                <span class="nav__icon" aria-hidden="true">
+                  <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z"></path>
+                    <path
+                      d="M0 7v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm5 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 5 9.5z"
+                    ></path>
+                  </svg>
+                </span>
+                <span class="nav__dot" aria-hidden="true"></span>
+                <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Billing</span>
+              </a>
+            </li>
+          }
+        </ul>
+      </div>
+
+      <div class="nav__group" role="group" aria-label="Configs">
+        <div class="nav__groupTitle" role="heading" aria-level="2">Configs</div>
+        <ul class="nav__items" role="list">
+          <li class="nav__item">
+            <a
+              class="nav__itemBtn"
+              routerLink="/configs"
+              routerLinkActive="nav__itemBtn--active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              #cfgActive="routerLinkActive"
+              [attr.aria-current]="cfgActive.isActive ? 'page' : null"
+              aria-label="Preferences"
+            >
+              <span class="nav__icon" aria-hidden="true">
+                <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+                  <path
+                    d="M9.667.864a1 1 0 0 0-1.333 0l-.79.79a1 1 0 0 1-1.415 0l-.79-.79a1 1 0 0 0-1.333 1.333l.79.79a1 1 0 0 1 0 1.415l-.79.79a1 1 0 0 0 0 1.333l.79.79a1 1 0 0 1 0 1.415l-.79.79a1 1 0 1 0 1.333 1.333l.79-.79a1 1 0 0 1 1.415 0l.79.79a1 1 0 0 0 1.333-1.333l-.79-.79a1 1 0 0 1 0-1.415l.79-.79a1 1 0 0 0 0-1.333l-.79-.79a1 1 0 0 1 0-1.415l.79-.79a1 1 0 0 0 0-1.333z"
+                  ></path>
+                  <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
+                </svg>
+              </span>
+              <span class="nav__dot" aria-hidden="true"></span>
+              <span class="nav__itemText" [class.a11y-sr-only]="collapsed()">Preferences</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="aside__profile" aria-label="User menu">
+      <app-user-profile-menu
+        [displayName]="displayName"
+        [email]="email"
+        (openProfile)="openProfile()"
+      />
+    </div>
+    <div class="aside__footer">
+      <button type="button" class="aside__footerBtn" (click)="closeMobile()">
+        <span class="aside__footerBtnText" [class.a11y-sr-only]="collapsed()">Close</span>
+      </button>
+    </div>
+  </div>
+</aside>

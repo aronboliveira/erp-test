@@ -1,0 +1,165 @@
+@use './mixins' as mixins;
+
+:where(.app-shell button, .app-shell [role='button']) {
+  appearance: none;
+  background: color-mix(in srgb, var(--surface-2) 85%, transparent);
+  border: 1px solid var(--border-weak);
+  border-radius: var(--radius-1);
+  color: var(--text-strong);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  padding: 0.55rem 0.85rem;
+  position: relative;
+  transition: all 160ms var(--ease-out);
+
+  &:hover {
+    border-color: var(--border-strong);
+    transform: translateY(-1px);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring();
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  &:enabled:active {
+    transform: translateY(1px) scale(0.995);
+  }
+}
+
+:where(.app-shell a:any-link) {
+  color: inherit;
+  text-decoration: none;
+  outline: 1px solid transparent;
+  outline-offset: 3px;
+  border-radius: var(--radius-1);
+  transition:
+    color 160ms var(--ease-out),
+    opacity 160ms var(--ease-out),
+    outline-color 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out),
+    filter 160ms var(--ease-out);
+
+  &:hover {
+    color: var(--accent);
+    outline-color: color-mix(in srgb, var(--accent) 55%, transparent);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+    filter: brightness(1.05);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring();
+    filter: brightness(1.05);
+  }
+
+  &:visited {
+    color: color-mix(in srgb, var(--accent) 70%, var(--text-strong));
+  }
+}
+
+:where(.app-shell input, .app-shell select, .app-shell textarea) {
+  appearance: none;
+  background: color-mix(in srgb, var(--surface-2) 85%, transparent);
+  border: 1px solid var(--border-weak);
+  border-radius: var(--radius-1);
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: 0.6rem 0.75rem;
+  transition:
+    border-color 160ms var(--ease-out),
+    background 160ms var(--ease-out),
+    box-shadow 160ms var(--ease-out);
+
+  &:hover {
+    border-color: var(--border-strong);
+  }
+
+  &:focus-visible {
+    @include mixins.focus-ring();
+  }
+
+  &:invalid {
+    border-color: color-mix(in srgb, var(--danger) 65%, transparent);
+  }
+
+  &:valid {
+    border-color: color-mix(in srgb, var(--accent) 35%, var(--border-weak));
+  }
+
+  &:required {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  }
+
+  &:read-only {
+    background: color-mix(in srgb, var(--surface-1) 85%, transparent);
+    color: var(--text-muted);
+  }
+
+  &:read-write {
+    background: color-mix(in srgb, var(--surface-2) 90%, transparent);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: var(--text-faint);
+  }
+}
+
+:where(.app-shell input[type='checkbox'], .app-shell input[type='radio']) {
+  accent-color: var(--accent);
+
+  &:checked {
+    filter: drop-shadow(0 0 8px rgba(139, 155, 255, 0.4));
+  }
+}
+
+:where(.app-shell .panel, .app-shell .card) {
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border-weak));
+    box-shadow: 0 0 0 1px rgba(139, 155, 255, 0.2), var(--shadow-2);
+  }
+}
+
+@supports selector(:has(*)) {
+  :where(.app-shell .panel, .app-shell .card):has(:focus-visible) {
+    border-color: color-mix(in srgb, var(--accent) 55%, var(--border-weak));
+    box-shadow: 0 0 0 1px rgba(139, 155, 255, 0.25), var(--shadow-2);
+  }
+}
+
+:where(.app-shell .list > :last-child) {
+  margin-bottom: 0;
+}
+
+:where(.app-shell .list > :last-of-type) {
+  border-bottom: none;
+}
+
+:where(.app-shell .panel:empty)::before {
+  content: 'No content';
+  color: var(--text-faint);
+  display: block;
+  padding: var(--space-4);
+}
+
+:where(.app-shell :where(.badge, .pill):where(:empty))::before {
+  content: '—';
+  color: var(--text-faint);
+}
+
+:where(.app-shell)::selection {
+  background: color-mix(in srgb, var(--accent) 40%, transparent);
+  color: var(--text-strong);
+}

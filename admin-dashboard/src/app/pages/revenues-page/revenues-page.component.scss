@@ -1,0 +1,41 @@
+@use '../../../styles/mixins' as mixins;
+
+.page--finance {
+  .search {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .search__input {
+    min-width: 12rem;
+    width: clamp(12rem, 30vw, 18rem);
+  }
+
+  .empty {
+    color: var(--text-muted);
+    padding: var(--space-4);
+    text-align: center;
+  }
+
+  .panel__body ngx-charts-line-chart,
+  .panel__body ngx-charts-bar-vertical {
+    animation: float-in 240ms var(--ease-out);
+  }
+}
+
+@container (min-width: 980px) {
+  .page--finance .search__input {
+    width: 20rem;
+  }
+}
+
+@container (max-width: 720px) {
+  .page--finance .search {
+    width: 100%;
+  }
+
+  .page--finance .search__input {
+    width: 100%;
+  }
+}

@@ -1,0 +1,145 @@
+<section appDarkModeClass class="billing-history page" aria-label="Billing history">
+  <header class="billing-history__header page__header">
+    <div>
+      <div class="page__titleRow">
+        <span class="page__titleIcon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+            <path
+              d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z"
+            ></path>
+            <path
+              d="M0 7v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm5 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 5 9.5z"
+            ></path>
+          </svg>
+        </span>
+        <h2 class="billing-history__title">Billing history</h2>
+      </div>
+      <p class="page__subtitle">Search and filter the latest payment events.</p>
+    </div>
+    <span class="tag">Events</span>
+  </header>
+
+  <form
+    class="billing-history__filters"
+    [formGroup]="form"
+    (ngSubmit)="load(0)"
+    aria-label="Billing history filters"
+  >
+    <label class="billing-history__label">
+      Provider
+      <input
+        class="billing-history__input"
+        type="text"
+        formControlName="provider"
+        placeholder="stripe"
+      />
+    </label>
+
+    <label class="billing-history__label">
+      Event type
+      <input
+        class="billing-history__input"
+        type="text"
+        formControlName="eventType"
+        placeholder="payment_intent.succeeded"
+      />
+    </label>
+
+    <label class="billing-history__label">
+      From
+      <input
+        class="billing-history__input"
+        type="datetime-local"
+        formControlName="receivedFrom"
+        [attr.aria-invalid]="rangeInvalid ? 'true' : 'false'"
+        [attr.aria-describedby]="rangeInvalid ? 'billing-history-error' : null"
+      />
+    </label>
+
+    <label class="billing-history__label">
+      To
+      <input
+        class="billing-history__input"
+        type="datetime-local"
+        formControlName="receivedTo"
+        [attr.aria-invalid]="rangeInvalid ? 'true' : 'false'"
+        [attr.aria-describedby]="rangeInvalid ? 'billing-history-error' : null"
+      />
+    </label>
+
+    <button
+      class="billing-history__btn"
+      type="submit"
+      [disabled]="isLoading"
+      aria-label="Apply filters"
+    >
+      {{ isLoading ? 'Loading...' : 'Apply' }}
+    </button>
+  </form>
+
+  <div class="billing-history__pager" role="group" aria-label="Pagination controls">
+    <button
+      class="billing-history__btn"
+      type="button"
+      (click)="prev()"
+      [disabled]="isFirstPage || isLoading"
+      [attr.aria-disabled]="isFirstPage || isLoading ? 'true' : 'false'"
+    >
+      Prev
+    </button>
+    <div class="billing-history__meta" aria-label="Page info">
+      Page {{ page + 1 }} • {{ total }} items
+    </div>
+    <button
+      class="billing-history__btn"
+      type="button"
+      (click)="next()"
+      [disabled]="isLastPage || isLoading"
+      [attr.aria-disabled]="isLastPage || isLoading ? 'true' : 'false'"
+    >
+      Next
+    </button>
+  </div>
+
+  @if (errorMessage) {
+    <p class="billing-history__error" role="alert" id="billing-history-error">
+      {{ errorMessage }}
+    </p>
+  }
+
+  <div
+    class="billing-history__tableWrap tableWrap"
+    role="region"
+    aria-label="Billing events table"
+    tabindex="0"
+    [attr.aria-busy]="isLoading ? 'true' : 'false'"
+  >
+    <table class="billing-history__table table" aria-label="Billing events">
+      <caption class="a11y-sr-only">Billing events</caption>
+      <thead>
+        <tr>
+          <th scope="col">Provider</th>
+          <th scope="col">Type</th>
+          <th scope="col">Event</th>
+          <th scope="col">Received</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (r of rows; track r.eventId) {
+          <tr>
+            <td>{{ r.provider }}</td>
+            <td>{{ r.eventType }}</td>
+            <td>{{ r.eventId }}</td>
+            <td>{{ r.prettyDate }}</td>
+          </tr>
+        } @empty {
+          @if (!isLoading) {
+            <tr>
+              <td class="billing-history__empty" colspan="4">No results.</td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+</section>

@@ -1,0 +1,136 @@
+<section appDarkModeClass class="page page--finance">
+  <header class="page__header">
+    <div>
+      <div class="page__titleRow">
+        <span class="page__titleIcon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path d="M2.25 18L9 11.25l4.306 4.307a.75.75 0 0 0 1.06 0L21.75 8.25"></path>
+            <path d="M21.75 8.25v6.75h-6.75"></path>
+          </svg>
+        </span>
+        <h1 class="page__title">Revenues</h1>
+      </div>
+      <p class="page__subtitle">Charts and ledger preview (placeholder data).</p>
+    </div>
+    <span class="tag">Live view</span>
+  </header>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi__label">This month</div>
+      <div class="kpi__value">{{ fmtMoney(totals.month) }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__label">Today</div>
+      <div class="kpi__value">{{ fmtMoney(totals.today) }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__label">Pending</div>
+      <div class="kpi__value">{{ fmtMoney(totals.pending) }}</div>
+    </div>
+  </div>
+
+  <div class="panel-grid">
+    <div class="panel">
+      <div class="panel__head">
+        <div class="panel__title">Trend</div>
+        <div class="panel__hint">Animated line chart</div>
+      </div>
+
+      <div class="panel__body">
+        <div class="panel__skeleton" *ngIf="!canRenderCharts()">
+          Charts render client-side only.
+        </div>
+
+        <ngx-charts-line-chart
+          *ngIf="canRenderCharts()"
+          [results]="line"
+          [legend]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [timeline]="false"
+          [animations]="true"
+          [roundDomains]="true"
+        ></ngx-charts-line-chart>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel__head">
+        <div class="panel__title">By channel</div>
+        <div class="panel__hint">Animated bar chart</div>
+      </div>
+
+      <div class="panel__body">
+        <div class="panel__skeleton" *ngIf="!canRenderCharts()">
+          Charts render client-side only.
+        </div>
+
+        <ngx-charts-bar-vertical
+          *ngIf="canRenderCharts()"
+          [results]="byChannel"
+          [xAxis]="true"
+          [yAxis]="true"
+          [animations]="true"
+          [roundEdges]="true"
+        ></ngx-charts-bar-vertical>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head">
+      <div class="panel__title">Ledger</div>
+
+      <label class="search">
+        <span class="search__label a11y-sr-only">Filter</span>
+        <input
+          class="search__input"
+          type="search"
+          placeholder="Filter by source or date..."
+          [value]="filter()"
+          (input)="filter.set($any($event.target).value)"
+          aria-label="Filter revenue entries"
+        />
+      </label>
+    </div>
+
+    <div class="panel__body">
+      <div class="tableWrap" role="region" aria-label="Revenue entries table">
+        <table class="table" role="table" aria-label="Revenue entries">
+          <caption class="a11y-sr-only">Revenue entries</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Source</th>
+              <th scope="col" class="table__cell--right">Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of filteredRows(); trackBy: trackRow">
+              <td>{{ r.date }}</td>
+              <td>{{ r.source }}</td>
+              <td class="table__cell--right">{{ fmtMoney(r.amount) }}</td>
+            </tr>
+
+            <tr *ngIf="filteredRows().length === 0">
+              <td colspan="3" class="empty">No results.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

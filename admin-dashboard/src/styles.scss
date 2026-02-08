@@ -1,0 +1,133 @@
+@use './styles/tokens';
+@use './styles/mixins';
+@use './styles/animations';
+@use './styles/controls';
+@use './styles/layout';
+
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  background: var(--surface-0);
+  color: var(--text-strong);
+  font-family: var(--font-sans);
+}
+
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+.a11y-sr-only {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+  white-space: nowrap;
+}
+
+.app-shell {
+  min-height: 100dvh;
+}
+
+
+.swal2-container {
+  backdrop-filter: blur(4px);
+}
+
+.swal2-popup {
+  border-radius: var(--radius-2) !important;
+  background: var(--surface-2) !important;
+  color: var(--text-strong) !important;
+  border: 1px solid var(--border-weak);
+  box-shadow: var(--shadow-1);
+}
+
+.swal-profile {
+  container-type: inline-size;
+
+  &__cols {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1rem;
+
+    @container (min-width: 560px) {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    gap: 0.75rem;
+
+    @container (min-width: 560px) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  &__h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin: 0 0 0.5rem 0;
+  }
+
+  &__label {
+    font-size: 0.78rem;
+    opacity: 0.75;
+  }
+
+  &__list {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  &__value {
+    font-size: 0.95rem;
+    font-weight: 600;
+  }
+}
+
+@counter-style admin-dash {
+  system: cyclic;
+  symbols: '▸';
+  suffix: ' ';
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .swal2-popup {
+    animation: none;
+  }
+}

@@ -1,0 +1,77 @@
+<section appDarkModeClass class="billing page" aria-label="Billing">
+  <header class="billing__header page__header">
+    <div>
+      <div class="page__titleRow">
+        <span class="page__titleIcon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+            <path
+              d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0V4z"
+            ></path>
+            <path
+              d="M0 7v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7H0zm5 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3A.5.5 0 0 1 5 9.5z"
+            ></path>
+          </svg>
+        </span>
+        <h1 class="billing__title">Billing</h1>
+      </div>
+      <p class="billing__subtitle">Create a Stripe checkout session and redirect.</p>
+    </div>
+    <span class="tag">Stripe ready</span>
+  </header>
+
+  <div class="billing__grid">
+    <div class="billing__card" role="group" aria-label="Plan selection">
+      <label class="billing__label" for="plan">Plan</label>
+      <select
+        id="plan"
+        class="billing__input"
+        [(ngModel)]="plan"
+        aria-required="true"
+        required
+      >
+        <option value="starter">Starter</option>
+        <option value="pro">Pro</option>
+      </select>
+
+      <label class="billing__label" for="email">Customer email (optional)</label>
+      <input
+        id="email"
+        class="billing__input"
+        type="email"
+        inputmode="email"
+        autocomplete="email"
+        placeholder="buyer@example.com"
+        [(ngModel)]="email"
+        [attr.aria-invalid]="email && !emailValid ? 'true' : 'false'"
+        [attr.aria-describedby]="email && !emailValid ? 'billing-email-hint' : null"
+      />
+      <p
+        class="billing__hint"
+        *ngIf="email && !emailValid"
+        role="alert"
+        id="billing-email-hint"
+      >
+        Please enter a valid email address.
+      </p>
+
+      <button
+        class="billing__cta"
+        type="button"
+        (click)="checkout()"
+        [disabled]="!emailValid || isProcessing"
+        aria-label="Pay with Stripe"
+      >
+        {{ isProcessing ? 'Creating checkout...' : 'Pay with Stripe' }}
+      </button>
+    </div>
+
+    <div class="billing__card" role="note" aria-label="Notes">
+      <h2 class="billing__h2">Notes</h2>
+      <ul class="billing__list">
+        <li>Backend endpoint: <code>/api/billing/checkout-session</code></li>
+        <li>Success: <code>/billing/success</code></li>
+        <li>Cancel: <code>/billing/cancel</code></li>
+      </ul>
+    </div>
+  </div>
+</section>

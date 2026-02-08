@@ -1,0 +1,113 @@
+<section appDarkModeClass class="page page--finance">
+  <header class="page__header">
+    <div>
+      <div class="page__titleRow">
+        <span class="page__titleIcon" aria-hidden="true">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            focusable="false"
+            aria-hidden="true"
+          >
+            <path d="M9.75 15.75 12 18l2.25-2.25"></path>
+            <path d="M12 6v12"></path>
+            <path
+              d="M6.75 3.75h10.5A2.25 2.25 0 0 1 19.5 6v12a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 18V6a2.25 2.25 0 0 1 2.25-2.25Z"
+            ></path>
+          </svg>
+        </span>
+        <h1 class="page__title">Expenses</h1>
+      </div>
+      <p class="page__subtitle">Charts and ledger preview (placeholder data).</p>
+    </div>
+    <span class="tag">Updated today</span>
+  </header>
+
+  <div class="kpi-row">
+    <div class="kpi">
+      <div class="kpi__label">This month</div>
+      <div class="kpi__value">{{ fmtMoney(totals.month) }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__label">Today</div>
+      <div class="kpi__value">{{ fmtMoney(totals.today) }}</div>
+    </div>
+
+    <div class="kpi">
+      <div class="kpi__label">Pending</div>
+      <div class="kpi__value">{{ fmtMoney(totals.pending) }}</div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head">
+      <div class="panel__title">By category</div>
+      <div class="panel__hint">Animated bar chart</div>
+    </div>
+
+    <div class="panel__body">
+      <div class="panel__skeleton" *ngIf="!canRenderCharts()">Charts render client-side only.</div>
+
+      <ngx-charts-bar-vertical
+        *ngIf="canRenderCharts()"
+        [results]="byCategory"
+        [xAxis]="true"
+        [yAxis]="true"
+        [animations]="true"
+        [roundEdges]="true"
+      ></ngx-charts-bar-vertical>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="panel__head">
+      <div class="panel__title">Ledger</div>
+
+      <label class="search">
+        <span class="search__label a11y-sr-only">Filter</span>
+        <input
+          class="search__input"
+          type="search"
+          placeholder="Filter by ref, category or date..."
+          [value]="filter()"
+          (input)="filter.set($any($event.target).value)"
+          aria-label="Filter expense entries"
+        />
+      </label>
+    </div>
+
+    <div class="panel__body">
+      <div class="tableWrap" role="region" aria-label="Expense entries table">
+        <table class="table" role="table" aria-label="Expense entries">
+          <caption class="a11y-sr-only">Expense entries</caption>
+          <thead>
+            <tr>
+              <th scope="col">Date</th>
+              <th scope="col">Category</th>
+              <th scope="col">Ref</th>
+              <th scope="col" class="table__cell--right">Amount</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let r of filteredRows(); trackBy: trackRow">
+              <td>{{ r.date }}</td>
+              <td>{{ r.category }}</td>
+              <td>{{ r.ref }}</td>
+              <td class="table__cell--right">{{ fmtMoney(r.amount) }}</td>
+            </tr>
+
+            <tr *ngIf="filteredRows().length === 0">
+              <td colspan="4" class="empty">No results.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

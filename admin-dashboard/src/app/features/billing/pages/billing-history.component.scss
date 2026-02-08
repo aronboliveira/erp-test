@@ -1,0 +1,84 @@
+@use '../../../../styles/mixins' as mixins;
+
+.billing-history {
+  @include mixins.flex-stack(var(--space-5));
+  container-type: inline-size;
+
+  &__header {
+    @include mixins.flex-stack(var(--space-2));
+  }
+
+  &__title {
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+    margin: 0;
+  }
+
+  &__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  &__label {
+    display: grid;
+    gap: var(--space-2);
+    font-weight: 600;
+    font-size: 0.85rem;
+    min-width: 12rem;
+    flex: 1 1 12rem;
+  }
+
+  &__btn {
+    align-self: flex-end;
+    min-width: 8rem;
+  }
+
+  &__pager {
+    @include mixins.flex-row(var(--space-3), center, flex-start);
+    flex-wrap: wrap;
+  }
+
+  &__meta {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  &__tableWrap {
+    padding: var(--space-3);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 4px;
+      background: linear-gradient(
+        180deg,
+        color-mix(in srgb, var(--accent) 45%, transparent),
+        color-mix(in srgb, var(--accent-3) 45%, transparent)
+      );
+      opacity: 0.6;
+    }
+  }
+
+  &__error {
+    color: var(--danger);
+    font-weight: 600;
+    margin: 0;
+  }
+
+  &__empty {
+    color: var(--text-muted);
+    padding: var(--space-4);
+    text-align: center;
+  }
+}
+
+@container (min-width: 900px) {
+  .billing-history__filters {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+    align-items: end;
+  }
+}

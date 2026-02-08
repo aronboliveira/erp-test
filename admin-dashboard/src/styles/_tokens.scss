@@ -1,0 +1,98 @@
+@use 'sass:math';
+
+@function rem($px) {
+  @return math.div($px, 16) * 1rem;
+}
+
+@property --glow {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+@property --lift {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+:root {
+  --font-sans: 'Manrope', 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Manrope', system-ui, sans-serif;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 2rem;
+  --space-8: 2.5rem;
+
+  --radius-1: #{rem(10)};
+  --radius-2: #{rem(14)};
+  --radius-3: #{rem(18)};
+  --radius-pill: 999px;
+
+  --border-weak: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --border-focus: rgba(59, 130, 246, 0.45);
+
+  --surface-0: #f5f7fb;
+  --surface-1: rgba(255, 255, 255, 0.85);
+  --surface-2: rgba(255, 255, 255, 0.95);
+  --surface-3: rgba(239, 242, 250, 0.92);
+
+  --text-strong: rgba(15, 23, 42, 0.96);
+  --text-muted: rgba(51, 65, 85, 0.8);
+  --text-faint: rgba(71, 85, 105, 0.65);
+
+  --accent: #8b9bff;
+  --accent-2: #22d3ee;
+  --accent-3: #f472b6;
+  --danger: #f87171;
+
+  --shadow-1: 0 20px 50px rgba(15, 23, 42, 0.12);
+  --shadow-2: 0 12px 28px rgba(15, 23, 42, 0.12);
+  --shadow-3: 0 8px 20px rgba(15, 23, 42, 0.1);
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-soft: cubic-bezier(0.2, 0.9, 0.2, 1);
+
+  --scrollbar-track: rgba(15, 23, 42, 0.08);
+  --scrollbar-thumb: rgba(15, 23, 42, 0.28);
+  --scrollbar-thumb-hover: rgba(15, 23, 42, 0.4);
+  --table-row-alt: rgba(15, 23, 42, 0.03);
+  --table-row-hover: rgba(59, 130, 246, 0.08);
+
+  color-scheme: light;
+}
+
+.dark-mode,
+[data-app-theme^='dark'] {
+  --surface-0: #05080f !important;
+  --surface-1: rgba(8, 12, 20, 0.82) !important;
+  --surface-2: rgba(12, 16, 24, 0.92) !important;
+  --surface-3: rgba(18, 22, 32, 0.98) !important;
+
+  --border-weak: rgba(255, 255, 255, 0.07) !important;
+  --border-strong: rgba(255, 255, 255, 0.16) !important;
+  --border-focus: rgba(99, 102, 241, 0.8) !important;
+
+  --text-strong: rgba(255, 255, 255, 0.96) !important;
+  --text-muted: rgba(255, 255, 255, 0.68) !important;
+  --text-faint: rgba(255, 255, 255, 0.46) !important;
+
+  --shadow-1: 0 20px 50px rgba(2, 6, 23, 0.55) !important;
+  --shadow-2: 0 12px 28px rgba(2, 6, 23, 0.4) !important;
+  --shadow-3: 0 8px 20px rgba(2, 6, 23, 0.32) !important;
+
+  --scrollbar-track: rgba(255, 255, 255, 0.06) !important;
+  --scrollbar-thumb: rgba(255, 255, 255, 0.18) !important;
+  --scrollbar-thumb-hover: rgba(255, 255, 255, 0.3) !important;
+  --table-row-alt: rgba(255, 255, 255, 0.04) !important;
+  --table-row-hover: rgba(129, 140, 248, 0.16) !important;
+
+  color-scheme: dark;
+}

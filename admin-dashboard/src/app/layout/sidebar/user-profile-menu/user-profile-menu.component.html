@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="user-prof"
+  aria-label="Open user profile"
+  (click)="openProfile.emit()"
+>
+  <div class="user-prof__avatar" aria-hidden="true">{{ initials }}</div>
+
+  <div class="user-prof__meta">
+    <div class="user-prof__name">{{ displayName || 'User' }}</div>
+    <div class="user-prof__email">{{ email || '—' }}</div>
+  </div>
+
+  <div class="user-prof__chev" aria-hidden="true">›</div>
+</button>

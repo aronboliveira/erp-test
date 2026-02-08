@@ -1,0 +1,51 @@
+<section appDarkModeClass class="configs page">
+  <header class="configs__header">
+    <div class="page__titleRow">
+      <span class="page__titleIcon" aria-hidden="true">
+        <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+          <path
+            d="M9.667.864a1 1 0 0 0-1.333 0l-.79.79a1 1 0 0 1-1.415 0l-.79-.79a1 1 0 0 0-1.333 1.333l.79.79a1 1 0 0 1 0 1.415l-.79.79a1 1 0 0 0 0 1.333l.79.79a1 1 0 0 1 0 1.415l-.79.79a1 1 0 1 0 1.333 1.333l.79-.79a1 1 0 0 1 1.415 0l.79.79a1 1 0 0 0 1.333-1.333l-.79-.79a1 1 0 0 1 0-1.415l.79-.79a1 1 0 0 0 0-1.333l-.79-.79a1 1 0 0 1 0-1.415l.79-.79a1 1 0 0 0 0-1.333z"
+          ></path>
+          <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"></path>
+        </svg>
+      </span>
+      <h1 class="page__title">Configs</h1>
+    </div>
+    <p class="page__subtitle">
+      Stored at
+      <code class="configs__code">_app_fin_ptXsT_cfgs</code>
+    </p>
+  </header>
+
+  <div class="configs__card">
+    <div class="configs__row">
+      <div class="configs__body">
+        <div class="configs__title">Dark mode</div>
+        <div class="configs__meta">
+            Uses <code>prefers-color-scheme</code> only as default; afterwards uses the saved value.
+        </div>
+      </div>
+
+      <label class="switch" [attr.aria-disabled]="canPersist() ? 'false' : 'true'">
+        <input
+          class="switch__input"
+          type="checkbox"
+          [checked]="cfg.isDarkMode()"
+          (change)="onToggleDarkMode($any($event.target).checked)"
+          [disabled]="!canPersist()"
+          role="switch"
+          [attr.aria-checked]="cfg.isDarkMode() ? 'true' : 'false'"
+          aria-label="Toggle dark mode"
+        />
+        <span class="switch__track" aria-hidden="true"></span>
+        <span class="switch__thumb" aria-hidden="true"></span>
+      </label>
+    </div>
+
+    <div class="configs__meta configs__meta--row">
+      <span class="kbd">Light</span>
+      <span class="configs__sep">/</span>
+      <span class="kbd">Dark</span>
+    </div>
+  </div>
+</section>

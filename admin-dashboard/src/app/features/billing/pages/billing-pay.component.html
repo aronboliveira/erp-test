@@ -1,0 +1,93 @@
+<section appDarkModeClass class="billing-pay page" aria-label="Pay with Stripe">
+  <header class="billing-pay__header page__header">
+    <div>
+      <div class="page__titleRow">
+        <span class="page__titleIcon" aria-hidden="true">
+          <svg viewBox="0 0 16 16" fill="currentColor" focusable="false" aria-hidden="true">
+            <path
+              d="M2 1a1 1 0 0 0-1 1v5h1V3h12v4h1V2a1 1 0 0 0-1-1H2z"
+            ></path>
+            <path
+              d="M3 8a.5.5 0 0 0-.5.5v1.5A1.5 1.5 0 0 0 4 11.5h1.5v1H5a.5.5 0 0 0 0 1h1v1h1v-1h2v1h1v-1h1a.5.5 0 0 0 0-1H10.5v-1H12a1.5 1.5 0 0 0 1.5-1.5V8.5a.5.5 0 0 0-.5-.5H3zm1 .5h8v1.5a.5.5 0 0 1-.5.5H4.5a.5.5 0 0 1-.5-.5V8.5z"
+            ></path>
+          </svg>
+        </span>
+        <h1 class="billing-pay__title">Pay</h1>
+      </div>
+      <p class="billing-pay__subtitle">PaymentIntent skeleton (noop backend for now).</p>
+    </div>
+    <span class="tag">Test mode</span>
+  </header>
+
+  <form
+    class="billing-pay__card"
+    [formGroup]="form"
+    (ngSubmit)="confirm()"
+    aria-label="Payment form"
+    [attr.aria-busy]="isMounting || isConfirming ? 'true' : 'false'"
+  >
+    <label class="billing-pay__label">
+      Amount (cents)
+      <input
+        class="billing-pay__input"
+        type="number"
+        formControlName="amountCents"
+        min="1"
+        step="1"
+        inputmode="numeric"
+      />
+    </label>
+
+    <label class="billing-pay__label">
+      Currency
+      <input
+        class="billing-pay__input"
+        type="text"
+        formControlName="currency"
+        maxlength="3"
+        autocapitalize="characters"
+        spellcheck="false"
+      />
+    </label>
+
+    <label class="billing-pay__label">
+      Email (optional)
+      <input
+        class="billing-pay__input"
+        type="email"
+        formControlName="email"
+        autocomplete="email"
+        inputmode="email"
+      />
+    </label>
+
+    <div class="billing-pay__stripe" aria-label="Stripe Elements host">
+      <div
+        #cardHost
+        class="billing-pay__stripeHost"
+        role="group"
+        aria-label="Card element host"
+      ></div>
+      <button
+        class="billing-pay__btn"
+        type="button"
+        (click)="mountCard()"
+        [disabled]="form.invalid || isMounting || isConfirming"
+        aria-label="Load card element"
+      >
+        {{ isMounting ? 'Loading card element...' : 'Load card element' }}
+      </button>
+    </div>
+
+    <button
+      class="billing-pay__btn"
+      type="submit"
+      [disabled]="form.invalid || isMounting || isConfirming"
+      aria-label="Confirm payment"
+    >
+      {{ isConfirming ? 'Confirming...' : 'Confirm payment' }}
+    </button>
+
+    <p class="billing-pay__error" *ngIf="errorMessage" role="alert">{{ errorMessage }}</p>
+  </form>
+</section>

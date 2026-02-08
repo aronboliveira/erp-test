@@ -1,0 +1,37 @@
+<div
+  class="shell app-shell"
+  appThemeVars
+  appDarkModeClass
+  [class.shell--collapsed]="sidebarCollapsed()"
+>
+  <a class="shell__skip" href="#main">Skip to content</a>
+  <app-sidebar
+    [activeId]="activeViewId()"
+    (select)="onSelect($event)"
+    (collapsedChange)="onSidebarCollapsed($event)"
+  >
+  </app-sidebar>
+  <main id="main" class="shell__main" role="main" aria-label="Dashboard content" tabindex="-1">
+    <div class="shell__content">
+      <section class="shell__section">
+        @switch (activeViewId()) {
+          @case ('configs') {
+            <app-configs-page />
+          }
+
+          @case ('revenues') {
+            <app-revenues-page />
+          }
+
+          @case ('expenses') {
+            <app-expenses-page />
+          }
+
+          @default {
+            <div class="shell__empty">Select a menu item.</div>
+          }
+        }
+      </section>
+    </div>
+  </main>
+</div>
