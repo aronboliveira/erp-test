@@ -1,3 +1,5 @@
+# 📑✍ THIS IS A PORTFOLIO PROJECT
+
 # ACME ERP — Admin Platform
 
 > Full-stack enterprise resource planning system: **Spring Boot 3.4 + Angular 20 SSR**
