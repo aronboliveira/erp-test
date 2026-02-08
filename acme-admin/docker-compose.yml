@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:16-alpine
+    container_name: acme-postgres
     environment:
       POSTGRES_DB: acmedb
       POSTGRES_USER: postgres
@@ -14,13 +15,17 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - acme-network
 
-  api:
+  app:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
+    container_name: acme-app
     ports:
       - "8080:8080"
+      - "4000:4000"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
       DATABASE_URL: jdbc:postgresql://postgres:5432/acmedb
@@ -33,18 +38,12 @@ services:
       postgres:
         condition: service_healthy
     restart: unless-stopped
-
-  dashboard:
-    build:
-      context: ../admin-dashboard
-      dockerfile: Dockerfile
-    ports:
-      - "4000:4000"
-    environment:
-      NODE_ENV: production
-    depends_on:
-      - api
-    restart: unless-stopped
+    networks:
+      - acme-network
 
 volumes:
   acme_pg:
+
+networks:
+  acme-network:
+    driver: bridge

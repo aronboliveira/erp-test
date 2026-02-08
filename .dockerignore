@@ -1,0 +1,14 @@
+acme-admin/target/
+acme-admin/*.iml
+acme-admin/.idea/
+admin-dashboard/node_modules/
+admin-dashboard/dist/
+admin-dashboard/.angular/
+*.log
+.DS_Store
+.git/
+.vscode/
+docker-compose.yml
+README.md
+infra/
+azure.yaml
