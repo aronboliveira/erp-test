@@ -21,6 +21,7 @@ RUN addgroup -S acme && adduser -S acme -G acme
 COPY --from=backend-build /backend/target/*.jar /app/backend.jar
 COPY --from=frontend-build /frontend/dist/admin-dashboard /app/frontend
 COPY --from=frontend-build /frontend/package.json /app/
+COPY --from=frontend-build /frontend/package-lock.json /app/
 RUN cd /app && npm ci --omit=dev --ignore-scripts && npm cache clean --force
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
