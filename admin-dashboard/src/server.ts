@@ -22,7 +22,6 @@ app.use(
   createProxyMiddleware({
     target: backendUrl,
     changeOrigin: true,
-    logLevel: 'debug',
   }),
 );
 
