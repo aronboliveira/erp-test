@@ -1,0 +1,425 @@
+# ACME ERP — Admin Platform
+
+> Full-stack enterprise resource planning system: **Spring Boot 3.4 + Angular 20 SSR**
+
+🇺🇸 [English (US)](#en-us) · 🇧🇷 [Português (BR)](#pt-br) · 🇬🇧 [English (UK)](#en-gb) · 🇫🇷 [Français](#fr) · 🇮🇹 [Italiano](#it) · 🇨🇳 [中文](#zh) · 🇷🇺 [Русский](#ru)
+
+---
+
+<a id="en-us"></a>
+<details open>
+<summary>🇺🇸 English (US)</summary>
+
+## Overview
+
+ACME Admin is a monorepo containing two workspaces:
+
+| Module | Stack | Port |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Features
+
+- **Finance** — Revenues, expenses, budgets, bills, purchases, hiring records
+- **Billing** — Stripe checkout sessions, payment intents, webhook ingestion
+- **Catalog** — Products & services with categories, SKU and tax linking
+- **Auth & RBAC** — Users, roles, permissions (BCrypt + stateless security)
+- **Flyway migrations** — Versioned schema with repeatable seed data
+
+### Prerequisites
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (or use the provided `docker-compose.yml`)
+
+### Quick Start
+
+```bash
+# 1. Start PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Run the API (dev profile — auto-seeds demo data)
+./start.sh
+
+# 3. In another terminal — start the dashboard
+cd admin-dashboard && npm install && npm start
+```
+
+### Project Structure
+
+```
+acme-admin/
+├── src/main/java/com/acme/admin/
+│   ├── api/              # Global exception mappers
+│   ├── controller/       # REST controllers
+│   ├── domain/           # JPA entities & specifications
+│   ├── dto/              # Request / response records
+│   ├── provider/         # Payment & access providers
+│   ├── repository/       # Spring Data JPA repos
+│   ├── security/         # Auth context, RBAC, Stripe gateway
+│   ├── seeding/          # Demo data runner
+│   ├── service/          # Business logic layer
+│   ├── time/             # Temporal utilities
+│   └── validation/       # Domain validation framework
+├── src/main/resources/
+│   ├── db/migration/     # Flyway SQL migrations
+│   └── application*.yml  # Profile configs (dev / prod)
+admin-dashboard/
+├── src/app/
+│   ├── core/             # Alerts, API client, auth, bootstrap
+│   ├── features/         # Billing, dashboard, orders, profile
+│   ├── layout/           # App shell, sidebar, topbar
+│   ├── lib/              # Interfaces, types, shared models
+│   ├── pages/            # Configs, expenses, revenues pages
+│   └── shared/           # Directives, services, theme, utils
+```
+
+### Environment Variables
+
+| Variable | Description | Required |
+|---|---|---|
+| `DATABASE_URL` | JDBC connection string | prod |
+| `DATABASE_USER` | PostgreSQL username | prod |
+| `DATABASE_PASSWORD` | PostgreSQL password | prod |
+| `STRIPE_PUBLISHABLE_KEY` | Stripe public key | prod |
+| `STRIPE_SECRET_KEY` | Stripe secret key | prod |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signing secret | prod |
+
+### API Endpoints
+
+| Method | Path | Description |
+|---|---|---|
+| `GET/POST` | `/api/sales/orders` | Orders CRUD |
+| `GET/POST` | `/api/finance/revenue` | Revenue records |
+| `GET/POST` | `/api/finance/expenses` | Expense records |
+| `GET/POST` | `/api/finance/budgets` | Budget periods |
+| `GET/POST` | `/api/finance/bills` | Bill management |
+| `GET/POST` | `/api/catalog/items` | Products & services |
+| `GET/POST` | `/api/taxes` | Tax configuration |
+| `POST` | `/api/billing/checkout-session` | Stripe checkout |
+| `POST` | `/api/billing/payment-intents` | Stripe payment intents |
+| `POST` | `/api/billing/webhook` | Stripe webhook receiver |
+| `GET` | `/api/billing/events` | Billing event log |
+| `GET/POST/PUT` | `/api/admin/users` | User management |
+| `GET/POST/PUT` | `/api/admin/roles` | Role management |
+| `GET` | `/api/me` | Current user profile |
+
+### Docker
+
+```bash
+# Full stack (API + DB + Dashboard)
+docker compose -f docker-compose.yml up --build
+```
+
+### License
+
+Private — all rights reserved.
+
+</details>
+
+---
+
+<a id="pt-br"></a>
+<details>
+<summary>🇧🇷 Português (BR)</summary>
+
+## Visão Geral
+
+ACME Admin é um monorepo contendo dois workspaces:
+
+| Módulo | Stack | Porta |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Funcionalidades
+
+- **Financeiro** — Receitas, despesas, orçamentos, contas, compras, contratações
+- **Cobrança** — Sessões de checkout Stripe, payment intents, ingestão de webhooks
+- **Catálogo** — Produtos e serviços com categorias, SKU e vinculação de impostos
+- **Auth & RBAC** — Usuários, papéis, permissões (BCrypt + segurança stateless)
+- **Migrações Flyway** — Schema versionado com dados de seed repetíveis
+
+### Pré-requisitos
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (ou use o `docker-compose.yml` fornecido)
+
+### Início Rápido
+
+```bash
+# 1. Iniciar PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Executar a API (perfil dev — popula dados demo)
+./start.sh
+
+# 3. Em outro terminal — iniciar o dashboard
+cd admin-dashboard && npm install && npm start
+```
+
+### Variáveis de Ambiente
+
+| Variável | Descrição | Obrigatória |
+|---|---|---|
+| `DATABASE_URL` | String de conexão JDBC | prod |
+| `DATABASE_USER` | Usuário PostgreSQL | prod |
+| `DATABASE_PASSWORD` | Senha PostgreSQL | prod |
+| `STRIPE_PUBLISHABLE_KEY` | Chave pública Stripe | prod |
+| `STRIPE_SECRET_KEY` | Chave secreta Stripe | prod |
+| `STRIPE_WEBHOOK_SECRET` | Segredo de assinatura webhook | prod |
+
+### Licença
+
+Privado — todos os direitos reservados.
+
+</details>
+
+---
+
+<a id="en-gb"></a>
+<details>
+<summary>🇬🇧 English (UK)</summary>
+
+## Overview
+
+ACME Admin is a monorepo containing two workspaces:
+
+| Module | Stack | Port |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Features
+
+- **Finance** — Revenues, expenses, budgets, bills, purchases, hiring records
+- **Billing** — Stripe checkout sessions, payment intents, webhook ingestion
+- **Catalogue** — Products & services with categories, SKU and tax linking
+- **Auth & RBAC** — Users, roles, permissions (BCrypt + stateless security)
+- **Flyway migrations** — Versioned schema with repeatable seed data
+
+### Prerequisites
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (or use the provided `docker-compose.yml`)
+
+### Quick Start
+
+```bash
+# 1. Start PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Run the API (dev profile — auto-seeds demo data)
+./start.sh
+
+# 3. In another terminal — start the dashboard
+cd admin-dashboard && npm install && npm start
+```
+
+### Licence
+
+Private — all rights reserved.
+
+</details>
+
+---
+
+<a id="fr"></a>
+<details>
+<summary>🇫🇷 Français</summary>
+
+## Aperçu
+
+ACME Admin est un monorepo contenant deux espaces de travail :
+
+| Module | Stack | Port |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Fonctionnalités
+
+- **Finance** — Revenus, dépenses, budgets, factures, achats, embauches
+- **Facturation** — Sessions Stripe checkout, payment intents, ingestion de webhooks
+- **Catalogue** — Produits et services avec catégories, SKU et liaison fiscale
+- **Auth & RBAC** — Utilisateurs, rôles, permissions (BCrypt + sécurité stateless)
+- **Migrations Flyway** — Schéma versionné avec données de seed répétables
+
+### Prérequis
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (ou utilisez le `docker-compose.yml` fourni)
+
+### Démarrage Rapide
+
+```bash
+# 1. Démarrer PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Lancer l'API (profil dev — peuple les données démo)
+./start.sh
+
+# 3. Dans un autre terminal — lancer le tableau de bord
+cd admin-dashboard && npm install && npm start
+```
+
+### Licence
+
+Privé — tous droits réservés.
+
+</details>
+
+---
+
+<a id="it"></a>
+<details>
+<summary>🇮🇹 Italiano</summary>
+
+## Panoramica
+
+ACME Admin è un monorepo contenente due workspace:
+
+| Modulo | Stack | Porta |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Funzionalità
+
+- **Finanza** — Entrate, spese, budget, fatture, acquisti, assunzioni
+- **Fatturazione** — Sessioni Stripe checkout, payment intents, ingestione webhook
+- **Catalogo** — Prodotti e servizi con categorie, SKU e collegamento fiscale
+- **Auth & RBAC** — Utenti, ruoli, permessi (BCrypt + sicurezza stateless)
+- **Migrazioni Flyway** — Schema versionato con dati di seed ripetibili
+
+### Prerequisiti
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (o utilizzare il `docker-compose.yml` fornito)
+
+### Avvio Rapido
+
+```bash
+# 1. Avviare PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Eseguire l'API (profilo dev — popola dati demo)
+./start.sh
+
+# 3. In un altro terminale — avviare la dashboard
+cd admin-dashboard && npm install && npm start
+```
+
+### Licenza
+
+Privato — tutti i diritti riservati.
+
+</details>
+
+---
+
+<a id="zh"></a>
+<details>
+<summary>🇨🇳 中文</summary>
+
+## 概述
+
+ACME Admin 是一个包含两个工作区的 monorepo：
+
+| 模块 | 技术栈 | 端口 |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### 功能
+
+- **财务** — 收入、支出、预算、账单、采购、招聘记录
+- **计费** — Stripe 结账会话、支付意向、Webhook 接收
+- **目录** — 产品与服务，支持分类、SKU 和税务关联
+- **认证与 RBAC** — 用户、角色、权限（BCrypt + 无状态安全）
+- **Flyway 迁移** — 版本化数据库架构与可重复的种子数据
+
+### 前置要求
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16（或使用提供的 `docker-compose.yml`）
+
+### 快速开始
+
+```bash
+# 1. 启动 PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. 运行 API（dev 配置文件 — 自动填充演示数据）
+./start.sh
+
+# 3. 在另一个终端 — 启动仪表板
+cd admin-dashboard && npm install && npm start
+```
+
+### 许可证
+
+私有 — 保留所有权利。
+
+</details>
+
+---
+
+<a id="ru"></a>
+<details>
+<summary>🇷🇺 Русский</summary>
+
+## Обзор
+
+ACME Admin — это монорепозиторий, содержащий два рабочих пространства:
+
+| Модуль | Стек | Порт |
+|---|---|---|
+| `acme-admin/` | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts | `4200` |
+
+### Возможности
+
+- **Финансы** — Доходы, расходы, бюджеты, счета, закупки, найм
+- **Биллинг** — Сессии Stripe checkout, платёжные намерения, приём вебхуков
+- **Каталог** — Товары и услуги с категориями, SKU и привязкой налогов
+- **Авторизация и RBAC** — Пользователи, роли, разрешения (BCrypt + stateless)
+- **Миграции Flyway** — Версионированная схема с повторяемыми данными
+
+### Предварительные требования
+
+- Java 21+
+- Node.js 20+
+- Docker & Docker Compose
+- PostgreSQL 16 (или используйте предоставленный `docker-compose.yml`)
+
+### Быстрый старт
+
+```bash
+# 1. Запустить PostgreSQL
+cd acme-admin && docker compose up -d
+
+# 2. Запустить API (профиль dev — автозаполнение демо-данными)
+./start.sh
+
+# 3. В другом терминале — запустить дашборд
+cd admin-dashboard && npm install && npm start
+```
+
+### Лицензия
+
+Частный — все права защищены.
+
+</details>
