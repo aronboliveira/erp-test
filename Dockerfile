@@ -23,38 +23,7 @@ COPY --from=frontend-build /frontend/dist/admin-dashboard /app/frontend
 COPY --from=frontend-build /frontend/package.json /app/
 RUN cd /app && npm ci --omit=dev --ignore-scripts && npm cache clean --force
 
-COPY <<EOF /etc/supervisor/conf.d/supervisord.conf
-[supervisord]
-nodaemon=true
-user=root
-logfile=/dev/stdout
-logfile_maxbytes=0
-loglevel=info
-
-[program:backend]
-command=java -XX:+UseContainerSupport -XX:MaxRAMPercentage=50.0 -Djava.security.egd=file:/dev/./urandom -jar /app/backend.jar
-autostart=true
-autorestart=true
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-user=acme
-priority=10
-
-[program:frontend]
-command=node /app/frontend/server/server.mjs
-directory=/app
-autostart=true
-autorestart=true
-stdout_logfile=/dev/stdout
-stdout_logfile_maxbytes=0
-stderr_logfile=/dev/stderr
-stderr_logfile_maxbytes=0
-user=acme
-priority=20
-EOF
-
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 RUN chown -R acme:acme /app
 
 EXPOSE 8080 4000
