@@ -134,24 +134,14 @@ wait_for_services() {
         sleep 1
     done
     
-    # Wait for Backend
-    echo -e "${CYAN}  • Backend API...${NC}"
+    # Wait for Frontend (which proxies to backend, so this validates both)
+    echo -e "${CYAN}  • Application (Backend + Frontend)...${NC}"
     for i in {1..60}; do
-        if curl -sf http://localhost:$BACKEND_PORT/actuator/health >/dev/null 2>&1; then
-            echo -e "${GREEN}    ✓ Backend ready${NC}"
-            break
-        fi
-        sleep 1
-    done
-    
-    # Wait for Frontend
-    echo -e "${CYAN}  • Frontend...${NC}"
-    for i in {1..30}; do
         if curl -sf http://localhost:$FRONTEND_PORT >/dev/null 2>&1; then
-            echo -e "${GREEN}    ✓ Frontend ready${NC}"
+            echo -e "${GREEN}    ✓ Application ready${NC}"
             break
         fi
-        sleep 1
+        sleep 2
     done
 }
 
