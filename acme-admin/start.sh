@@ -126,13 +126,21 @@ echo ""
 
 echo -e "${BLUE}[4/6]${NC} ${BOLD}Starting Docker containers...${NC}"
 echo -e "${CYAN}→ Building and starting: PostgreSQL + Backend (Spring Boot) + Frontend (Angular SSR)${NC}"
-docker compose up -d --build
+
+# Check if we need sudo for docker
+if ! docker ps &> /dev/null; then
+    echo -e "${YELLOW}→ Docker requires sudo privileges${NC}"
+    sudo docker compose up -d --build
+else
+    docker compose up -d --build
+fi
+
 echo -e "${GREEN}✓ Containers started successfully${NC}\n"
 
 echo -e "${BLUE}[5/6]${NC} ${BOLD}Waiting for services to be ready...${NC}"
 echo -e "${CYAN}→ Checking database...${NC}"
 for i in {1..30}; do
-    if docker compose exec -T postgres pg_isready -U postgres &> /dev/null; then
+    if docker compose exec -T postgres pg_isready -U postgres &> /dev/null 2>&1 || sudo docker compose exec -T postgres pg_isready -U postgres &> /dev/null 2>&1; then
         echo -e "${GREEN}✓ PostgreSQL is ready${NC}"
         break
     fi
