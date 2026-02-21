@@ -10,11 +10,17 @@ NC='\033[0m'
 
 echo -e "${CYAN}🛑 Stopping ACME ERP containers...${NC}"
 
-# Try regular docker first, fallback to sudo
-if docker compose ps >/dev/null 2>&1; then
-    docker compose down
+# Check whether sudo can run non-interactively
+can_sudo_non_interactive() {
+    sudo -n true >/dev/null 2>&1
+}
+
+if docker compose down; then
+    :
+elif can_sudo_non_interactive; then
+    sudo -n docker compose down
 else
-    sudo docker compose down
+    echo -e "${YELLOW}⚠ Could not stop with sudo (non-interactive). Continuing...${NC}"
 fi
 
 echo -e "${GREEN}✓ All containers stopped${NC}"
@@ -23,10 +29,12 @@ echo -e "${GREEN}✓ All containers stopped${NC}"
 read -p "Remove volumes (database data will be lost)? [y/N] " -n 1 -r
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    if docker compose ps >/dev/null 2>&1; then
-        docker compose down -v
+    if docker compose down -v; then
+        :
+    elif can_sudo_non_interactive; then
+        sudo -n docker compose down -v
     else
-        sudo docker compose down -v
+        echo -e "${YELLOW}⚠ Could not remove volumes with sudo (non-interactive).${NC}"
     fi
     echo -e "${YELLOW}✓ Volumes removed${NC}"
 fi
@@ -34,11 +42,20 @@ fi
 # Clean up stale port bindings
 echo -e "${CYAN}→ Cleaning up port bindings...${NC}"
 for port in 5432 6379 8080 4000; do
-    pids=$(sudo lsof -t -i:$port 2>/dev/null | grep -v "^$" || true)
+    lsof_cmd="lsof"
+    if can_sudo_non_interactive; then
+        lsof_cmd="sudo -n lsof"
+    fi
+
+    pids=$($lsof_cmd -t -iTCP:$port -sTCP:LISTEN 2>/dev/null | grep -v "^$" || true)
     if [ ! -z "$pids" ]; then
-        process_names=$(sudo lsof -i:$port 2>/dev/null | grep LISTEN | awk '{print $1}' | sort -u || true)
+        process_names=$($lsof_cmd -iTCP:$port -sTCP:LISTEN 2>/dev/null | awk 'NR>1 {print $1}' | sort -u || true)
         if echo "$process_names" | grep -q "docker-pr"; then
-            echo "$pids" | xargs -r sudo kill -9 2>/dev/null || true
+            if can_sudo_non_interactive; then
+                echo "$pids" | xargs -r sudo -n kill -9 2>/dev/null || true
+            else
+                echo "$pids" | xargs -r kill -9 2>/dev/null || true
+            fi
         fi
     fi
 done

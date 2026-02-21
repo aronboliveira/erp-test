@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5434}:5432"
     volumes:
       - acme_pg:/var/lib/postgresql/data
     healthcheck:
@@ -35,19 +35,21 @@ services:
       - "${FRONTEND_PORT:-4000}:4000"
     environment:
       SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
-      DATABASE_URL: jdbc:postgresql://postgres:5432/acmedb
+      DATABASE_URL: jdbc:postgresql://host.docker.internal:${POSTGRES_PORT:-5434}/acmedb
       DATABASE_USER: postgres
       DATABASE_PASSWORD: postgres
       STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
       STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
       STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
       postgres:
         condition: service_healthy
         restart: true
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:4000 || exit 1"]
+      test: ["CMD-SHELL", "wget -qO- http://localhost:4000 >/dev/null || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 5

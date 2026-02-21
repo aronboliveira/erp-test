@@ -18,10 +18,19 @@ RETRY_COUNT=0
 echo -e "${CYAN}🚀 ACME ERP - Automated Docker Boot${NC}"
 echo "================================================"
 
+# Check whether sudo can run non-interactively
+can_sudo_non_interactive() {
+    sudo -n true >/dev/null 2>&1
+}
+
 # Function to check if port is available
 check_port() {
     local port=$1
-    ! (sudo lsof -i :$port >/dev/null 2>&1 || lsof -i :$port >/dev/null 2>&1)
+    if command -v ss >/dev/null 2>&1; then
+        ! ss -H -ltn "sport = :$port" | grep -q .
+    else
+        ! lsof -nPiTCP:$port -sTCP:LISTEN >/dev/null 2>&1
+    fi
 }
 
 # Function to find available port
@@ -44,12 +53,21 @@ cleanup_stale_ports() {
     echo -e "${YELLOW}→ Cleaning up stale port bindings...${NC}"
     
     for port in 5432 6379 8080 4000; do
-        local pids=$(sudo lsof -t -i:$port 2>/dev/null | grep -v "^$" || true)
+        local lsof_cmd="lsof"
+        if can_sudo_non_interactive; then
+            lsof_cmd="sudo -n lsof"
+        fi
+
+        local pids=$($lsof_cmd -t -iTCP:$port -sTCP:LISTEN 2>/dev/null | grep -v "^$" || true)
         if [ ! -z "$pids" ]; then
-            local process_names=$(sudo lsof -i:$port 2>/dev/null | grep LISTEN | awk '{print $1}' | sort -u || true)
+            local process_names=$($lsof_cmd -iTCP:$port -sTCP:LISTEN 2>/dev/null | awk 'NR>1 {print $1}' | sort -u || true)
             if echo "$process_names" | grep -q "docker-pr"; then
                 echo -e "${YELLOW}  • Killing stale docker-proxy on port $port${NC}"
-                echo "$pids" | xargs -r sudo kill -9 2>/dev/null || true
+                if can_sudo_non_interactive; then
+                    echo "$pids" | xargs -r sudo -n kill -9 2>/dev/null || true
+                else
+                    echo "$pids" | xargs -r kill -9 2>/dev/null || true
+                fi
                 sleep 0.5
             fi
         fi
@@ -103,20 +121,16 @@ start_containers() {
     
     echo -e "\n${BLUE}→ Starting containers (attempt $attempt/$MAX_RETRIES)...${NC}"
     
-    # Try with sudo first, fallback to regular docker
-    if docker compose ps >/dev/null 2>&1; then
-        docker compose up -d --build 2>&1
-    else
-        sudo -E docker compose up -d --build 2>&1
-    fi
-    
-    local exit_code=$?
-    
-    if [ $exit_code -eq 0 ]; then
+    if docker compose up -d --build 2>&1; then
         return 0
-    else
-        return 1
     fi
+
+    if can_sudo_non_interactive; then
+        sudo -n -E docker compose up -d --build 2>&1
+        return $?
+    fi
+
+    return 1
 }
 
 # Function to wait for services
@@ -127,7 +141,7 @@ wait_for_services() {
     echo -e "${CYAN}  • PostgreSQL...${NC}"
     for i in {1..30}; do
         if docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1 || \
-           sudo docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1; then
+           (can_sudo_non_interactive && sudo -n docker compose exec -T postgres pg_isready -U postgres >/dev/null 2>&1); then
             echo -e "${GREEN}    ✓ PostgreSQL ready${NC}"
             break
         fi
@@ -168,7 +182,7 @@ while [ $RETRY_COUNT -lt $MAX_RETRIES ]; do
             echo -e "${YELLOW}→ Cleaning up and retrying in 3 seconds...${NC}"
             
             # Cleanup
-            docker compose down -v 2>/dev/null || sudo docker compose down -v 2>/dev/null || true
+            docker compose down -v 2>/dev/null || (can_sudo_non_interactive && sudo -n docker compose down -v 2>/dev/null) || true
             cleanup_stale_ports
             
             sleep 3

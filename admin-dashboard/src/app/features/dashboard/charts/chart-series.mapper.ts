@@ -8,7 +8,7 @@ export class ChartSeriesMapper implements ChartSeriesMapperPort {
 
     for (const r of rev) {
       const label = r.occurredAt.slice(0, 10);
-      const value = Number(r.amount);
+      const value = this.#readMoney(r, ['amount', 'total', 'amountCents']);
       Number.isFinite(value) ? series.push({ name: label, value }) : void 0;
     }
 
@@ -18,8 +18,9 @@ export class ChartSeriesMapper implements ChartSeriesMapperPort {
   toExpenseBars(exp: readonly ExpenseDto[]): readonly NgxSeriesPoint[] {
     const agg: Record<string, number> = {};
     for (const e of exp) {
-      const k = e.category || 'Uncategorized';
-      const v = Number(e.amount);
+      const anyExpense = e as unknown as Record<string, unknown>;
+      const k = String(anyExpense['category'] ?? anyExpense['categoryId'] ?? 'Uncategorized');
+      const v = this.#readMoney(e, ['amount', 'total', 'amountCents']);
       Number.isFinite(v) ? (agg[k] = (agg[k] || 0) + v) : void 0;
     }
 
@@ -33,8 +34,8 @@ export class ChartSeriesMapper implements ChartSeriesMapperPort {
     budgets: readonly BudgetDto[],
     expenses: readonly ExpenseDto[],
   ): readonly NgxSeriesPoint[] {
-    const planned = budgets.reduce((a, b) => a + (Number(b.plannedAmount) || 0), 0);
-    const spent = expenses.reduce((a, e) => a + (Number(e.amount) || 0), 0);
+    const planned = budgets.reduce((a, b) => a + this.#readMoney(b, ['plannedAmount', 'totalAmount']), 0);
+    const spent = expenses.reduce((a, e) => a + this.#readMoney(e, ['amount', 'total', 'amountCents']), 0);
 
     const safePlanned = Number.isFinite(planned) ? planned : 0;
     const safeSpent = Number.isFinite(spent) ? spent : 0;
@@ -44,5 +45,20 @@ export class ChartSeriesMapper implements ChartSeriesMapperPort {
       Object.freeze({ name: 'Spent', value: safeSpent }),
       Object.freeze({ name: 'Remaining', value: remaining }),
     ]);
+  }
+
+  #readMoney(obj: unknown, keys: readonly string[]): number {
+    const record = obj as Record<string, unknown>;
+    for (const key of keys) {
+      const raw = record[key];
+      if (raw === null || raw === undefined) continue;
+
+      const parsed = Number(raw);
+      if (!Number.isFinite(parsed)) continue;
+
+      if (key.toLowerCase().includes('cents')) return parsed / 100;
+      return parsed;
+    }
+    return 0;
   }
 }

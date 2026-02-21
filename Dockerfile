@@ -25,7 +25,6 @@ COPY --from=frontend-build /frontend/package-lock.json /app/
 RUN cd /app && npm install --omit=dev --legacy-peer-deps && npm cache clean --force
 
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-RUN chown -R acme:acme /app
 
 EXPOSE 8080 4000
 
