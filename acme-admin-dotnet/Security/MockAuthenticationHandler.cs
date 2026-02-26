@@ -44,13 +44,15 @@ public sealed class MockAuthenticationHandler(
             return AuthenticateResult.Success(BuildTicket(mockUser.ToString().Trim(), null, perms, ["MockUser"]));
         }
 
-        return AuthenticateResult.NoResult();
+        // Portfolio mode: no interactive login is required for local/demo usage.
+        // When no auth headers are provided, treat requests as an admin-like session.
+        return AuthenticateResult.Success(BuildTicket("admin", null, CanonicalPermissionCodes, ["SuperAdmin"]));
     }
 
     protected override Task HandleChallengeAsync(AuthenticationProperties properties)
     {
         Response.StatusCode = StatusCodes.Status401Unauthorized;
-        Response.Headers.WWWAuthenticate = "Basic realm=\"acme-admin\"";
+        // Intentionally no WWW-Authenticate header to avoid browser basic-auth popup prompts.
         return Task.CompletedTask;
     }
 

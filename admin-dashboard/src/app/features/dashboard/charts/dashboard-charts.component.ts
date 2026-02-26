@@ -4,6 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import type { ChartTileSpec } from './chart.types';
 import { ChartSeriesMapper } from './chart-series.mapper';
 import { ApiClientService } from '../../../core/api/api-client.service';
+import type { RevenueDto, ExpenseDto, BudgetDto } from '../../../core/api/api-contract.types';
 
 @Component({
   standalone: true,
@@ -97,11 +98,30 @@ export class DashboardChartsComponent {
         this.#api.call('finance.budget.list'),
       ]);
 
-      this.revenueLine = this.#mapper.toRevenueLine(rev) as any;
-      this.expenseBars = this.#mapper.toExpenseBars(exp) as any;
-      this.budgetDonut = this.#mapper.toBudgetDonut(bud, exp) as any;
+      const revenueItems = this.#unwrapItems<RevenueDto>(rev);
+      const expenseItems = this.#unwrapItems<ExpenseDto>(exp);
+      const budgetItems = this.#unwrapItems<BudgetDto>(bud);
+
+      this.revenueLine = this.#mapper.toRevenueLine(revenueItems) as any;
+      this.expenseBars = this.#mapper.toExpenseBars(expenseItems) as any;
+      this.budgetDonut = this.#mapper.toBudgetDonut(budgetItems, expenseItems) as any;
     } catch (e) {
       console.error('DashboardChartsComponent load failed', e);
     }
+  }
+
+  #unwrapItems<T>(value: unknown): readonly T[] {
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    if (value && typeof value === 'object') {
+      const items = (value as { items?: unknown }).items;
+      if (Array.isArray(items)) {
+        return items as readonly T[];
+      }
+    }
+
+    return [];
   }
 }
