@@ -44,9 +44,9 @@ public sealed class MockAuthenticationHandler(
             return AuthenticateResult.Success(BuildTicket(mockUser.ToString().Trim(), null, perms, ["MockUser"]));
         }
 
-        // Portfolio mode: no interactive login is required for local/demo usage.
-        // When no auth headers are provided, treat requests as an admin-like session.
-        return AuthenticateResult.Success(BuildTicket("admin", null, CanonicalPermissionCodes, ["SuperAdmin"]));
+        // Strict auth mode: if neither Basic nor allowed mock headers are provided,
+        // the request remains unauthenticated and authorization will challenge with 401.
+        return AuthenticateResult.NoResult();
     }
 
     protected override Task HandleChallengeAsync(AuthenticationProperties properties)
