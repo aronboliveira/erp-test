@@ -162,6 +162,12 @@ wait_for_services() {
 # Main execution
 cd "$(dirname "$0")"
 
+# Validate migrated backend workspace exists.
+if [ ! -f "acme-admin-dotnet/Acme.Admin.Api.csproj" ]; then
+    echo -e "${RED}✗ .NET backend project not found at acme-admin-dotnet/Acme.Admin.Api.csproj${NC}"
+    exit 1
+fi
+
 # Cleanup stale ports first
 cleanup_stale_ports
 

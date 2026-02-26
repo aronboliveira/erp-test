@@ -2,6 +2,8 @@
 
 Automated, safe Docker container management with automatic port conflict resolution and retry logic.
 
+Current `main` backend runtime: `.NET 8` (`acme-admin-dotnet`).
+
 ## Quick Start
 
 ### Start All Services
@@ -77,6 +79,18 @@ sudo docker compose logs -f
 
 # Restart a service
 sudo docker compose restart app
+```
+
+Stripe variables for real billing flow:
+
+```bash
+export STRIPE_PUBLISHABLE_KEY=pk_live_or_test
+export STRIPE_SECRET_KEY=sk_live_or_test
+export STRIPE_WEBHOOK_SECRET=whsec_...
+export AUTH_ENABLE_MOCK_HEADER=true   # optional for test flows (ignored in Production)
+export ENABLE_MOCK_HEADERS=true       # optional: SSR proxy forwards X-Mock-* headers
+export MOCK_USER=admin
+export MOCK_PERMS=users.write,roles.read
 ```
 
 ## Troubleshooting

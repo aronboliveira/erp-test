@@ -2,7 +2,8 @@
 
 # ACME ERP — Admin Platform
 
-> Full-stack enterprise resource planning system: **Spring Boot 3.4 + Angular 20 SSR**
+> Full-stack enterprise resource planning system: **.NET 8 + Angular 20 SSR**
+> Java backend is preserved in the `backend-java-version` branch
 
 🇺🇸 [English (US)](#en-us) · 🇧🇷 [Português (BR)](#pt-br) · 🇬🇧 [English (UK)](#en-gb) · 🇫🇷 [Français](#fr) · 🇮🇹 [Italiano](#it) · 🇨🇳 [中文](#zh) · 🇷🇺 [Русский](#ru)
 
@@ -19,7 +20,7 @@ ACME Admin is a monorepo containing two workspaces:
 
 | Module             | Stack                                                       | Port   |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Features
@@ -28,11 +29,11 @@ ACME Admin is a monorepo containing two workspaces:
 - **Billing** — Stripe checkout sessions, payment intents, webhook ingestion
 - **Catalog** — Products & services with categories, SKU and tax linking
 - **Auth & RBAC** — Users, roles, permissions (BCrypt + stateless security)
-- **Flyway migrations** — Versioned schema with repeatable seed data
+- **Schema compatibility** — Reuses the existing PostgreSQL schema from the Java line
 
 ### Prerequisites
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (or use the provided `docker-compose.yml`)
@@ -41,10 +42,10 @@ ACME Admin is a monorepo containing two workspaces:
 
 ```bash
 # 1. Start PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
-# 2. Run the API (dev profile — auto-seeds demo data)
-./start.sh
+# 2. Run the API (dev)
+cd acme-admin-dotnet && ./start.sh
 
 # 3. In another terminal — start the dashboard
 cd admin-dashboard && npm install && npm start
@@ -53,22 +54,15 @@ cd admin-dashboard && npm install && npm start
 ### Project Structure
 
 ```
-acme-admin/
-├── src/main/java/com/acme/admin/
-│   ├── api/              # Global exception mappers
-│   ├── controller/       # REST controllers
-│   ├── domain/           # JPA entities & specifications
-│   ├── dto/              # Request / response records
-│   ├── provider/         # Payment & access providers
-│   ├── repository/       # Spring Data JPA repos
-│   ├── security/         # Auth context, RBAC, Stripe gateway
-│   ├── seeding/          # Demo data runner
-│   ├── service/          # Business logic layer
-│   ├── time/             # Temporal utilities
-│   └── validation/       # Domain validation framework
-├── src/main/resources/
-│   ├── db/migration/     # Flyway SQL migrations
-│   └── application*.yml  # Profile configs (dev / prod)
+acme-admin-dotnet/
+├── Controllers/          # REST controllers
+├── Data/                 # EF Core DbContext and mappings
+├── Domain/               # Entities and enums
+├── DTO/                  # Request/response contracts
+├── Middleware/           # API exception mapping
+├── Security/             # Auth handler and policy catalog
+├── Services/             # Business logic layer
+└── Validation/           # Validation framework
 admin-dashboard/
 ├── src/app/
 │   ├── core/             # Alerts, API client, auth, bootstrap
@@ -83,18 +77,22 @@ admin-dashboard/
 
 | Variable                 | Description                   | Required |
 | ------------------------ | ----------------------------- | -------- |
-| `DATABASE_URL`           | JDBC connection string        | prod     |
-| `DATABASE_USER`          | PostgreSQL username           | prod     |
-| `DATABASE_PASSWORD`      | PostgreSQL password           | prod     |
-| `STRIPE_PUBLISHABLE_KEY` | Stripe public key             | prod     |
-| `STRIPE_SECRET_KEY`      | Stripe secret key             | prod     |
-| `STRIPE_WEBHOOK_SECRET`  | Stripe webhook signing secret | prod     |
+| `ConnectionStrings__Default` | PostgreSQL connection string (`Host=...;Port=...`) | prod |
+| `Stripe__PublishableKey` | Stripe public key             | prod     |
+| `Billing__Stripe__SecretKey` | Stripe secret key        | prod     |
+| `Billing__Stripe__WebhookSecret` | Stripe webhook signing secret | prod |
+| `Billing__Stripe__SuccessUrl` | Billing success redirect URL | optional |
+| `Billing__Stripe__CancelUrl` | Billing cancel redirect URL | optional |
+| `Auth__EnableMockHeader` | Enables `X-Mock-User` / `X-Mock-Perms` auth headers in non-production environments only | optional |
+| `ENABLE_MOCK_HEADERS` | Enables SSR proxy injection of mock headers to backend requests | optional |
+| `MOCK_USER` | User value for SSR-injected `X-Mock-User` header (used only when `ENABLE_MOCK_HEADERS=true`) | optional |
+| `MOCK_PERMS` | Permission list for SSR-injected `X-Mock-Perms` header | optional |
 
 ### API Endpoints
 
 | Method         | Path                            | Description             |
 | -------------- | ------------------------------- | ----------------------- |
-| `GET/POST`     | `/api/sales/orders`             | Orders CRUD             |
+| `GET/POST`     | `/api/sales/orders`             | Orders endpoints        |
 | `GET/POST`     | `/api/finance/revenue`          | Revenue records         |
 | `GET/POST`     | `/api/finance/expenses`         | Expense records         |
 | `GET/POST`     | `/api/finance/budgets`          | Budget periods          |
@@ -135,7 +133,7 @@ ACME Admin é um monorepo contendo dois workspaces:
 
 | Módulo             | Stack                                                       | Porta  |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Funcionalidades
@@ -144,11 +142,11 @@ ACME Admin é um monorepo contendo dois workspaces:
 - **Cobrança** — Sessões de checkout Stripe, payment intents, ingestão de webhooks
 - **Catálogo** — Produtos e serviços com categorias, SKU e vinculação de impostos
 - **Auth & RBAC** — Usuários, papéis, permissões (BCrypt + segurança stateless)
-- **Migrações Flyway** — Schema versionado com dados de seed repetíveis
+- **Compatibilidade de schema** — Reutiliza o schema PostgreSQL existente da linha Java
 
 ### Pré-requisitos
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (ou use o `docker-compose.yml` fornecido)
@@ -157,10 +155,10 @@ ACME Admin é um monorepo contendo dois workspaces:
 
 ```bash
 # 1. Iniciar PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. Executar a API (perfil dev — popula dados demo)
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. Em outro terminal — iniciar o dashboard
 cd admin-dashboard && npm install && npm start
@@ -170,12 +168,16 @@ cd admin-dashboard && npm install && npm start
 
 | Variável                 | Descrição                     | Obrigatória |
 | ------------------------ | ----------------------------- | ----------- |
-| `DATABASE_URL`           | String de conexão JDBC        | prod        |
-| `DATABASE_USER`          | Usuário PostgreSQL            | prod        |
-| `DATABASE_PASSWORD`      | Senha PostgreSQL              | prod        |
-| `STRIPE_PUBLISHABLE_KEY` | Chave pública Stripe          | prod        |
-| `STRIPE_SECRET_KEY`      | Chave secreta Stripe          | prod        |
-| `STRIPE_WEBHOOK_SECRET`  | Segredo de assinatura webhook | prod        |
+| `ConnectionStrings__Default` | String de conexão PostgreSQL (`Host=...;Port=...`) | prod |
+| `Stripe__PublishableKey` | Chave pública Stripe          | prod        |
+| `Billing__Stripe__SecretKey` | Chave secreta Stripe    | prod        |
+| `Billing__Stripe__WebhookSecret` | Segredo de assinatura webhook | prod |
+| `Billing__Stripe__SuccessUrl` | URL de sucesso da cobrança | opcional |
+| `Billing__Stripe__CancelUrl` | URL de cancelamento da cobrança | opcional |
+| `Auth__EnableMockHeader` | Habilita headers `X-Mock-User` / `X-Mock-Perms` em ambientes não produtivos | opcional |
+| `ENABLE_MOCK_HEADERS` | Habilita injeção de headers mock no proxy SSR | opcional |
+| `MOCK_USER` | Usuário para header `X-Mock-User` (quando `ENABLE_MOCK_HEADERS=true`) | opcional |
+| `MOCK_PERMS` | Lista de permissões para header `X-Mock-Perms` | opcional |
 
 ### Licença
 
@@ -196,7 +198,7 @@ ACME Admin is a monorepo containing two workspaces:
 
 | Module             | Stack                                                       | Port   |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Features
@@ -205,11 +207,11 @@ ACME Admin is a monorepo containing two workspaces:
 - **Billing** — Stripe checkout sessions, payment intents, webhook ingestion
 - **Catalogue** — Products & services with categories, SKU and tax linking
 - **Auth & RBAC** — Users, roles, permissions (BCrypt + stateless security)
-- **Flyway migrations** — Versioned schema with repeatable seed data
+- **Schema compatibility** — Reuses the existing PostgreSQL schema from the Java line
 
 ### Prerequisites
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (or use the provided `docker-compose.yml`)
@@ -218,10 +220,10 @@ ACME Admin is a monorepo containing two workspaces:
 
 ```bash
 # 1. Start PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. Run the API (dev profile — auto-seeds demo data)
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. In another terminal — start the dashboard
 cd admin-dashboard && npm install && npm start
@@ -246,7 +248,7 @@ ACME Admin est un monorepo contenant deux espaces de travail :
 
 | Module             | Stack                                                       | Port   |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Fonctionnalités
@@ -255,11 +257,11 @@ ACME Admin est un monorepo contenant deux espaces de travail :
 - **Facturation** — Sessions Stripe checkout, payment intents, ingestion de webhooks
 - **Catalogue** — Produits et services avec catégories, SKU et liaison fiscale
 - **Auth & RBAC** — Utilisateurs, rôles, permissions (BCrypt + sécurité stateless)
-- **Migrations Flyway** — Schéma versionné avec données de seed répétables
+- **Compatibilité du schéma** — Réutilise le schéma PostgreSQL existant de la ligne Java
 
 ### Prérequis
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (ou utilisez le `docker-compose.yml` fourni)
@@ -268,10 +270,10 @@ ACME Admin est un monorepo contenant deux espaces de travail :
 
 ```bash
 # 1. Démarrer PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. Lancer l'API (profil dev — peuple les données démo)
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. Dans un autre terminal — lancer le tableau de bord
 cd admin-dashboard && npm install && npm start
@@ -296,7 +298,7 @@ ACME Admin è un monorepo contenente due workspace:
 
 | Modulo             | Stack                                                       | Porta  |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Funzionalità
@@ -305,11 +307,11 @@ ACME Admin è un monorepo contenente due workspace:
 - **Fatturazione** — Sessioni Stripe checkout, payment intents, ingestione webhook
 - **Catalogo** — Prodotti e servizi con categorie, SKU e collegamento fiscale
 - **Auth & RBAC** — Utenti, ruoli, permessi (BCrypt + sicurezza stateless)
-- **Migrazioni Flyway** — Schema versionato con dati di seed ripetibili
+- **Compatibilità schema** — Riutilizza lo schema PostgreSQL esistente della linea Java
 
 ### Prerequisiti
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (o utilizzare il `docker-compose.yml` fornito)
@@ -318,10 +320,10 @@ ACME Admin è un monorepo contenente due workspace:
 
 ```bash
 # 1. Avviare PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. Eseguire l'API (profilo dev — popola dati demo)
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. In un altro terminale — avviare la dashboard
 cd admin-dashboard && npm install && npm start
@@ -346,7 +348,7 @@ ACME Admin 是一个包含两个工作区的 monorepo：
 
 | 模块               | 技术栈                                                      | 端口   |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### 功能
@@ -355,11 +357,11 @@ ACME Admin 是一个包含两个工作区的 monorepo：
 - **计费** — Stripe 结账会话、支付意向、Webhook 接收
 - **目录** — 产品与服务，支持分类、SKU 和税务关联
 - **认证与 RBAC** — 用户、角色、权限（BCrypt + 无状态安全）
-- **Flyway 迁移** — 版本化数据库架构与可重复的种子数据
+- **Schema 兼容性** — 复用 Java 线已有的 PostgreSQL schema
 
 ### 前置要求
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16（或使用提供的 `docker-compose.yml`）
@@ -368,10 +370,10 @@ ACME Admin 是一个包含两个工作区的 monorepo：
 
 ```bash
 # 1. 启动 PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. 运行 API（dev 配置文件 — 自动填充演示数据）
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. 在另一个终端 — 启动仪表板
 cd admin-dashboard && npm install && npm start
@@ -396,7 +398,7 @@ ACME Admin — это монорепозиторий, содержащий дв�
 
 | Модуль             | Стек                                                        | Порт   |
 | ------------------ | ----------------------------------------------------------- | ------ |
-| `acme-admin/`      | Java 21 · Spring Boot 3.4 · PostgreSQL 16 · Flyway · Stripe | `8080` |
+| `acme-admin-dotnet/` | .NET 8 · ASP.NET Core · EF Core · PostgreSQL 16 · Stripe(noop-first) | `8080` |
 | `admin-dashboard/` | Angular 20 · SSR (Express 5) · Tailwind v4 · ngx-charts     | `4200` |
 
 ### Возможности
@@ -405,11 +407,11 @@ ACME Admin — это монорепозиторий, содержащий дв�
 - **Биллинг** — Сессии Stripe checkout, платёжные намерения, приём вебхуков
 - **Каталог** — Товары и услуги с категориями, SKU и привязкой налогов
 - **Авторизация и RBAC** — Пользователи, роли, разрешения (BCrypt + stateless)
-- **Миграции Flyway** — Версионированная схема с повторяемыми данными
+- **Совместимость схемы** — Переиспользует существующую PostgreSQL-схему из Java-линии
 
 ### Предварительные требования
 
-- Java 21+
+- .NET 8 SDK
 - Node.js 20+
 - Docker & Docker Compose
 - PostgreSQL 16 (или используйте предоставленный `docker-compose.yml`)
@@ -418,10 +420,10 @@ ACME Admin — это монорепозиторий, содержащий дв�
 
 ```bash
 # 1. Запустить PostgreSQL
-cd acme-admin && docker compose up -d
+docker compose up -d postgres
 
 # 2. Запустить API (профиль dev — автозаполнение демо-данными)
-./start.sh
+cd acme-admin-dotnet && ./start.sh
 
 # 3. В другом терминале — запустить дашборд
 cd admin-dashboard && npm install && npm start

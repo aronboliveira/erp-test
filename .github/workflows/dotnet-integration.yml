@@ -1,0 +1,48 @@
+name: dotnet-integration
+
+on:
+  pull_request:
+    paths:
+      - "acme-admin-dotnet/**"
+      - ".github/workflows/dotnet-integration.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "acme-admin-dotnet/**"
+      - ".github/workflows/dotnet-integration.yml"
+
+jobs:
+  integration-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - name: Restore integration test project
+        run: dotnet restore acme-admin-dotnet/tests/Acme.Admin.Api.IntegrationTests/Acme.Admin.Api.IntegrationTests.csproj
+
+      - name: Run integration tests
+        env:
+          DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+          DOTNET_NOLOGO: "true"
+          TESTCONTAINERS_RYUK_DISABLED: "true"
+        run: >
+          dotnet test acme-admin-dotnet/tests/Acme.Admin.Api.IntegrationTests/Acme.Admin.Api.IntegrationTests.csproj
+          --configuration Release
+          --logger "trx;LogFileName=integration.trx"
+          --results-directory acme-admin-dotnet/TestResults
+          --verbosity normal
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dotnet-integration-test-results
+          path: acme-admin-dotnet/TestResults

@@ -34,13 +34,17 @@ services:
       - "${BACKEND_PORT:-8080}:8080"
       - "${FRONTEND_PORT:-4000}:4000"
     environment:
-      SPRING_PROFILES_ACTIVE: ${SPRING_PROFILES_ACTIVE:-dev}
-      DATABASE_URL: jdbc:postgresql://host.docker.internal:${POSTGRES_PORT:-5434}/acmedb
-      DATABASE_USER: postgres
-      DATABASE_PASSWORD: postgres
-      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
-      STRIPE_SECRET_KEY: ${STRIPE_SECRET_KEY:-}
-      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET:-}
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Development}
+      ConnectionStrings__Default: Host=host.docker.internal;Port=${POSTGRES_PORT:-5434};Database=acmedb;Username=postgres;Password=postgres
+      Auth__EnableMockHeader: ${AUTH_ENABLE_MOCK_HEADER:-false}
+      ENABLE_MOCK_HEADERS: ${ENABLE_MOCK_HEADERS:-false}
+      MOCK_USER: ${MOCK_USER:-}
+      MOCK_PERMS: ${MOCK_PERMS:-}
+      Stripe__PublishableKey: ${STRIPE_PUBLISHABLE_KEY:-pk_test_noop}
+      Billing__Stripe__SecretKey: ${STRIPE_SECRET_KEY:-}
+      Billing__Stripe__WebhookSecret: ${STRIPE_WEBHOOK_SECRET:-whsec_dev}
+      Billing__Stripe__SuccessUrl: ${BILLING_STRIPE_SUCCESS_URL:-http://localhost:${FRONTEND_PORT:-4000}/billing/success}
+      Billing__Stripe__CancelUrl: ${BILLING_STRIPE_CANCEL_URL:-http://localhost:${FRONTEND_PORT:-4000}/billing/cancel}
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:

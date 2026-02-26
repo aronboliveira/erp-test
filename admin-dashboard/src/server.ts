@@ -17,7 +17,8 @@ const angularApp = new AngularNodeAppEngine();
  * Proxy API requests to the backend
  */
 const backendUrl = process.env['BACKEND_URL'] || 'http://localhost:8080';
-const mockUser = process.env['MOCK_USER'] || 'admin';
+const enableMockHeaders = process.env['ENABLE_MOCK_HEADERS'] === 'true';
+const mockUser = process.env['MOCK_USER'] || '';
 const mockPerms = process.env['MOCK_PERMS'] || '';
 app.use(
   '/api',
@@ -27,10 +28,10 @@ app.use(
     pathRewrite: (path) => `/api${path}`,
     on: {
       proxyReq: (proxyReq) => {
-        if (mockUser) {
+        if (enableMockHeaders && mockUser) {
           proxyReq.setHeader('X-Mock-User', mockUser);
         }
-        if (mockPerms) {
+        if (enableMockHeaders && mockPerms) {
           proxyReq.setHeader('X-Mock-Perms', mockPerms);
         }
       },
